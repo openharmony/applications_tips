@@ -1,0 +1,9 @@
+{
+  "name": "@ohos/common",
+  "version": "1.0.0",
+  "description": "tips common capabilities",
+  "main": "Index.ets",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}

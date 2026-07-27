@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "EntryAbility_label",
+      "value": "ཁ་པར་བཀོལ་སྤྱོད་རྩེད་མོ།"
+    },
+    {
+      "name": "EntryFormAbility_label",
+      "value": "ཁ་པར་བཀོལ་སྤྱོད་རྩེད་མོ།"
+    },
+    {
+      "name": "widget_display_name",
+      "value": "ཉིན་རེའི་གསར་བཤུས།"
+    },
+    {
+      "name": "widget_desc",
+      "value": "ཁྱད་ཆོས་གསར་བའི་ནུས་པ་རྩེད་མོ།"
+    }
+  ]
+}

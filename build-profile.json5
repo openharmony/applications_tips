@@ -1,0 +1,104 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "release",
+        "material": {
+          "certpath": "signature/OpenHarmony.cer",
+          "keyAlias": "OpenHarmony Application Release",
+          "keyPassword": "00000016C93D550C2AD65D472D2AE303226491D7BC4C5F61FCD39A569905CBE66E1C6ECFBCB0",
+          "profile": "signature/tips.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "signature/OpenHarmony.p12",
+          "storePassword": "000000161816C5119A65590D35EB3A769E7A6EEE5B00E69D2F7AF0B4FDF4DD0D008684C689BE"
+        }
+      },
+      {
+        "name": "default",
+        "material": {
+          "certpath": "signature/OpenHarmony.cer",
+          "keyAlias": "OpenHarmony Application Release",
+          "keyPassword": "00000016BE12C462ECE157746FD1B9AF11F4EEF3DFBA311A656C426B898486704A6E85389E52",
+          "profile": "signature/tips.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "signature/OpenHarmony.p12",
+          "storePassword": "000000163EAE02764BD330F182DC6B49CE92419C83282C166359C09255B1F5F7F808CF1F010F"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compileSdkVersion": 23,
+        "compatibleSdkVersion": 20,
+        "runtimeOS": "OpenHarmony",
+        "targetSdkVersion": 20,
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "tips_common",
+      "srcPath": "./common",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tips_form",
+      "srcPath": "./feature/tips_form",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tips_detail",
+      "srcPath": "./feature/tips_detail",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "entry",
+      "srcPath": "./product/phone",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

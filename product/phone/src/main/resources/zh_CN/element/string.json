@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "EntryAbility_label",
+      "value": "玩机技巧"
+    },
+    {
+      "name": "EntryFormAbility_label",
+      "value": "玩机技巧"
+    },
+    {
+      "name": "widget_display_name",
+      "value": "每日精选"
+    },
+    {
+      "name": "widget_desc",
+      "value": "探索亮点功能技巧"
+    }
+  ]
+}
