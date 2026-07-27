@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "EntryAbility_label",
+      "value": "تېلېفون ئىشلىتىش ئۇسۇللىرى"
+    },
+    {
+      "name": "EntryFormAbility_label",
+      "value": "تېلېفون ئىشلىتىش ئۇسۇللىرى"
+    },
+    {
+      "name": "widget_display_name",
+      "value": "كۈندىلىك تاللانما"
+    },
+    {
+      "name": "widget_desc",
+      "value": "ئالاھىدە ئىقتىدار ماھارەتلىرىنى كەشپىي قىلىڭ"
+    }
+  ]
+}
