@@ -385,7 +385,7 @@ Want参数结构示意：
 
 目的：阅读完整图文说明。
 
-1. 点击桌面服务卡片，或由其他应用通过Want传入`detailLink`启动`EntryAbility`。
+1. 点击桌面服务卡片，或由其它应用通过Want传入`detailLink`启动`EntryAbility`。
 2. 在详情页阅读标题、正文与配图。
 
 正确标准：展示内容与`rawfile/{detailLink}/detail.json`及配图一致；宽屏断点下可为左右分栏。

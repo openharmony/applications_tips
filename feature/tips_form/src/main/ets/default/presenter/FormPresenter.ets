@@ -21,7 +21,7 @@ import formProvider from "@ohos.app.form.formProvider";
 import { FormParam } from "../model/FormParam";
 import { Want } from "@kit.AbilityKit";
 import formInfo from "@ohos.app.form.formInfo";
-import { FormJumpParam } from '../model/FormJumpParam';
+import { FormJumpParam } from "../model/FormJumpParam";
 
 /**
  * 卡片Presenter
