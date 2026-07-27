@@ -1,0 +1,13 @@
+{
+  "name": "entry",
+  "version": "1.0.0",
+  "description": "tips product entry",
+  "main": "",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ohos/common": "../../common",
+    "@ohos/tips_form": "../../feature/tips_form",
+    "@ohos/tips_detail": "../../feature/tips_detail"
+  }
+}

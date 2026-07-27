@@ -1,0 +1,12 @@
+{
+  "id": "tip_calendar",
+  "image": "tip_calendar.png",
+  "title": {
+    "zh": "智能日程规划你的每一天",
+    "en": "Smart scheduling plans your day"
+  },
+  "content": {
+    "zh": "日历应用是日常生活中不可或缺的时间管理工具，它提供日程管理、节假日提醒、农历显示等丰富功能，帮助你高效规划工作与生活。无论是重要的会议、朋友的生日，还是定期体检、信用卡还款，都可以通过创建日程事件并设置重复提醒，确保每一个重要时刻都不会被遗忘。",
+    "en": "The calendar app is an indispensable time management tool in daily life. It offers a variety of features like schedule management, holiday reminders, and lunar calendar displays to help you plan work and life efficiently. Whether it's an important meeting, a friend's birthday, a routine check-up, or a credit card payment, you can create events and set recurring reminders to make sure you never forget any important moment."
+  }
+}

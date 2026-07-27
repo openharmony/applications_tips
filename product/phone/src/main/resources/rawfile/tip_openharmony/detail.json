@@ -1,0 +1,12 @@
+{
+  "id": "tip_openharmony",
+  "image": "tip_openharmony.png",
+  "title": {
+    "zh": "构建万物互联的开源底座",
+    "en": "Building an open-source foundation for connecting everything"
+  },
+  "content": {
+    "zh": "OpenHarmony 是由开放原子开源基金会孵化及运营的开源项目，旨在面向全场景、全连接、全智能时代，搭建一个统一的开源操作系统底座。它并非专为单一设备设计，而是从底层架构出发，支持从手机、平板到智能穿戴、智慧屏、车机乃至 IoT 等多种设备形态，实现一次开发、多端部署。\n\n在技术层面，OpenHarmony 的核心竞争力在于分布式能力。通过分布式软总线、分布式数据管理、分布式任务调度等技术，不同设备可以像一个整体一样协同工作——手机上正在编辑的文档可以无缝流转到平板继续，智能手表收集的健康数据自动同步到手机端分析。同时，方舟编译器和 ArkTS 语言为开发者提供了高效的开发体验，显著提升了应用的运行性能。\n\n作为开源生态的重要一环，OpenHarmony 采用 Apache 2.0 开源协议，欢迎全球开发者共同参与共建。截至目前，已有数十家企业和数万名开发者活跃在社区中，贡献了涵盖开发框架、系统能力、行业解决方案等丰富组件。无论是个人开发者学习研究，还是企业进行商业化落地，OpenHarmony 都提供了一个开放、灵活且可持续演进的技术平台。\n",
+    "en": "OpenHarmony is an open-source project incubated and operated by the OpenAtom Foundation. It's designed to serve the era of full scenarios, full connectivity, and full intelligence by building a unified open-source OS base. It's not made for a single device but is built from the ground up to support a variety of devices—from phones and tablets to smart wearables, smart screens, car systems, and even IoT—allowing developers to write once and deploy across multiple devices.\n\nTechnically, OpenHarmony's core strength lies in its distributed capabilities. Using technologies like distributed soft bus, distributed data management, and distributed task scheduling, different devices can work together as if they were one—so a document you're editing on your phone can seamlessly continue on your tablet, or health data collected by your smartwatch automatically syncs to your phone for analysis. At the same time, the Ark compiler and ArkTS language give developers a smooth and efficient development experience, significantly improving app performance.\n\nAs an important part of the open-source ecosystem, OpenHarmony uses the Apache 2.0 license and welcomes developers from around the world to contribute. So far, dozens of companies and tens of thousands of developers are active in the community, contributing a wide range of components from development frameworks to system capabilities and industry solutions. Whether you're an individual learning and experimenting or a company looking to commercialize, OpenHarmony offers an open, flexible, and sustainably evolving technology platform."
+  }
+}

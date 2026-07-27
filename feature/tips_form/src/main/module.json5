@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "tips_form",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

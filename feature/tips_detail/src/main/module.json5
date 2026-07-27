@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "tips_detail",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}
