@@ -30,7 +30,7 @@ export class DetailResponsiveLayoutUtil {
   static readonly IMAGE_SHORT_SIDE_RATIO: number = 0.8;
   /** pad 横屏文本区域宽度：屏幕长边的 40% */
   static readonly TEXT_LONG_SIDE_RATIO: number = 0.4;
-  public static readonly TEXT_MARGIN_2M: number = 16;
+  static readonly TEXT_MARGIN_2M: number = 16;
 
   /** lg/xl 横向断点（≥840vp） */
   static is12C(widthBp: WidthBreakpoint): boolean {
