@@ -15,7 +15,7 @@
 import common from "@ohos.app.ability.common";
 import { TipsEntity } from "../entity/TipsEntity";
 import { TipModel } from "../model/TipModel";
-import { ContextHelper, Logger, RawFileResourceUtil } from "@ohos/common";
+import { ContextHelper, Logger, RawFileResourceUtil } from '@ohos/common';
 
 /**
  * 卡片转换类

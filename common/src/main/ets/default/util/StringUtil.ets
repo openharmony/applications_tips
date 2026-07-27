@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import util from "@ohos.util";
+import util from '@ohos.util';
 
 /**
  * 字符串帮助类
