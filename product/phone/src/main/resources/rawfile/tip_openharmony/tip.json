@@ -1,0 +1,8 @@
+{
+  "tipBgImage": "card_bg.jpg",
+  "tipDesc": {
+    "zh": "构建万物互联的开源底座",
+    "en": "Building an open-source foundation for connecting everything"
+  },
+  "detailLink": "tip_openharmony"
+}

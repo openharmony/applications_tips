@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2026 Huawei Device Co., Ltd.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+    This is the configuration file template for OpenHarmony OSS Audit Tool, please copy it to your project root dir and modify it refer to OpenHarmony/tools_oat/README.
+
+-->
+
+<configuration>
+    <oatconfig>
+        <licensefile></licensefile>
+        <policylist>
+            <policy
+                desc=""
+                name="projectPolicy">
+                <!--policyitem type="compatibility" name="GPL-2.0+" path="abc/.*" desc="Process that runs independently, invoked by the X process."/-->
+                <!--policyitem type="license" name="LGPL" path="abc/.*" desc="Dynamically linked by module X"/-->
+                <!--policyitem type="copyright" name="xxx" path="abc/.*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc="Developed by X Company"/-->
+                <policyitem type="copyright" name="Huawei Device Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>
+            </policy>
+        </policylist>
+        <filefilterlist>
+            <filefilter
+                desc="Files that do not need to be scanned"
+                name="defaultFilter">
+                <filteritem
+                    desc="out put files"
+                    name="gradle/wrapper/.*.jar"
+                    type="filepath"/>
+                <filteritem
+                    desc="out put files"
+                    name="sign/.*"
+                    type="filepath"/>
+                <filteritem
+                    desc="out put files"
+                    name="signature/.*"
+                    type="filepath"/>
+                <filteritem type="filename" name="*.png|*.PNG|*.jpg|*.jpeg|*.webp|*.mp4|*.ttf|*.wav|*.ap" desc="self developed image"/>
+            </filefilter>
+            <filefilter
+                desc="Filters for compatibility，license header policies"
+                name="defaultPolicyFilter">
+            </filefilter>
+            <filefilter
+                desc="Filters for copyright header policies"
+                name="copyrightPolicyFilter">
+            </filefilter>
+            <filefilter
+                desc="Filters for LICENSE file policies"
+                name="licenseFileNamePolicyFilter">
+            </filefilter>
+            <filefilter
+                desc="Filters for README file policies"
+                name="readmeFileNamePolicyFilter">
+            </filefilter>
+            <filefilter
+                desc="Filters for README.OpenSource file policies"
+                name="readmeOpenSourcefileNamePolicyFilter">
+            </filefilter>
+            <filefilter name="defaultFilter" desc="Files not to check">
+                <filteritem type="filepath" name=".*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="AppScope/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="product/phone/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="product/phone/src/main/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="common/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="feature/.*/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="hvigor/.*.json5" desc="build config file"/>
+                <filteritem type="filepath" name="product/phone/build/.*" desc="Temp files"/>
+                <filteritem type="filepath" name="oh_modules/.*" desc="Temp files"/>
+                <filteritem type="filepath" name="product/phone/oh_modules/.*" desc="Temp files"/>
+                <filteritem type="filepath" name="common/oh_modules/.*" desc="Temp files"/>
+                <filteritem type="filepath" name="feature/.*/oh_modules/.*" desc="Temp files"/>
+            </filefilter>
+            <filefilter
+                desc="Filters for binary file policies"
+                name="binaryFileTypePolicyFilter">
+                <filteritem
+                    desc="self developed image"
+                    name="AppScope/resources/base/media/.*"
+                    type="filepath"/>
+                <filteritem
+                    desc="self developed image"
+                    name="product/phone/src/main/resources/base/media/.*"
+                    type="filepath"/>
+                <filteritem
+                    desc="self developed image"
+                    name="product/phone/src/main/resources/rawfile/.*.png"
+                    type="filepath"/>
+                <filteritem
+                    desc="self developed image"
+                    name="product/phone/src/main/resources/rawfile/.*.jpg"
+                    type="filepath"/>
+                <filteritem
+                    desc="self developed image"
+                    name="product/phone/src/main/resources/rawfile/.*.jpeg"
+                    type="filepath"/>
+                <filteritem
+                    desc="self developed image"
+                    name="product/phone/src/main/resources/rawfile/.*.webp"
+                    type="filepath"/>
+                <filteritem type="filename" name="*.ets|*.hpp" desc="file is recognized as a binary file."/>
+            </filefilter>
+
+        </filefilterlist>
+        <licensematcherlist>
+            <!--licensematcher name="uvwxyz License" desc="If the scanning result is InvalidLicense, you can define matching rules here. Note that quotation marks must be escaped.">
+                <licensetext name="
+                    uvwxyz license textA xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                                 " desc=""/>
+                <licensetext name="
+                    uvwxyz license textB xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                                 " desc=""/>
+            </licensematcher-->
+        </licensematcherlist>
+    </oatconfig>
+</configuration>
