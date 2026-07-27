@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import common from "@ohos.app.ability.common";
+import common from '@ohos.app.ability.common';
 
 /**
  * 上下文帮助类

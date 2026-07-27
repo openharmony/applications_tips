@@ -29,7 +29,7 @@ export struct DetailPage {
   @State detailText: string = '';
   @State isSideBySide: boolean = false;
   @State imageSize: DetailImageSize = { width: 0, height: 0 };
-  @State TextSize: number = 0;
+  @State textSize: number = 0;
 
   aboutToAppear(): void {
     this.loadDetailContent();
@@ -103,7 +103,7 @@ export struct DetailPage {
       Scroll(){
         this.DetailTextBlock(24, 16, 24, TextAlign.Start)
       }
-      .width(this.TextSize > 0 ? this.TextSize : '40%')
+      .width(this.textSize > 0 ? this.textSize : '40%')
       .height('100%')
       .scrollBar(BarState.Off)
       .edgeEffect(EdgeEffect.Spring)
@@ -191,7 +191,7 @@ export struct DetailPage {
     this.isSideBySide = DetailResponsiveLayoutUtil.isSideBySide(
       this.windowInfo.widthBp, this.windowInfo.windowSize);
     this.imageSize = DetailResponsiveLayoutUtil.getImageSize(this.windowInfo.windowSize);
-    this.TextSize = DetailResponsiveLayoutUtil.getTextAreaWidth(this.windowInfo.windowSize);
+    this.textSize = DetailResponsiveLayoutUtil.getTextAreaWidth(this.windowInfo.windowSize);
   }
 
   private loadDetailContent(): void {

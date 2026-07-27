@@ -13,5 +13,5 @@ export default class BuildProfile {
 	static readonly HAR_VERSION = HAR_VERSION;
 	static readonly BUILD_MODE_NAME = BUILD_MODE_NAME;
 	static readonly DEBUG = DEBUG;
-	static readonly TARGET_NAME = TARGET_NAME;
+	public static readonly TARGET_NAME = TARGET_NAME;
 }
