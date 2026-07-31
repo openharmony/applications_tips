@@ -12,17 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import common from "@ohos.app.ability.common";
-import { TipsConvert } from "../convert/TipsConvert";
-import { DetailPageConstant, ContextHelper, Logger, RawFileResourceUtil } from "@ohos/common";
-import { TipsEntity } from "../entity/TipsEntity";
-import formBindingData from "@ohos.app.form.formBindingData";
-import formProvider from "@ohos.app.form.formProvider";
-import { FormParam } from "../model/FormParam";
-import { Want } from "@kit.AbilityKit";
-import formInfo from "@ohos.app.form.formInfo";
-import { FormJumpParam } from "../model/FormJumpParam";
-
+import common from '@ohos.app.ability.common';
+import { TipsConvert } from '../convert/TipsConvert';
+import { DetailPageConstant, ContextHelper, Logger, RawFileResourceUtil } from '@ohos/common';
+import { TipsEntity } from '../entity/TipsEntity';
+import formBindingData from '@ohos.app.form.formBindingData';
+import formProvider from '@ohos.app.form.formProvider';
+import { FormParam } from '../model/FormParam';
+import { Want } from '@kit.AbilityKit';
+import formInfo from '@ohos.app.form.formInfo';
+import { FormJumpParam } from '../model/FormJumpParam';
 /**
  * 卡片Presenter
  */

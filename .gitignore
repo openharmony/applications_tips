@@ -3,6 +3,7 @@
 /local.properties
 /.idea
 **/build
+**/BuildProfile.ets
 /.hvigor
 .cxx
 /.clangd
