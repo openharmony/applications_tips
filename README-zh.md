@@ -1,64 +1,42 @@
-# 玩机技巧
+# 玩机技巧（Tips）
 
 ## 简介
 
-### 内容介绍
+**玩机技巧**（应用包名：`com.ohos.tips`）是OpenHarmony中预置的**系统应用**，应用通过服务卡片、详情页向用户提供设备使用技巧，并适配手机、平板形态。
 
-玩机技巧（应用包名：`com.ohos.tips`）是OpenHarmony标准系统预置应用。在系统应用层面向用户提供设备使用技巧的浏览与展示能力，通过详情页沉浸式展示图文内容，并支持系统语言切换与跨应用跳转。
+### 核心能力
 
-#### 核心功能
+**详情页**
+- 支持详情页展示技巧标题、正文与配图，内容区域延伸到状态栏显示，实现沉浸式交互体验。
+- 支持响应式布局，根据设备类型与窗口断点自适应布局，手机采用上下布局，平板在宽屏场景下采用左右分栏。
+- 支持跟随系统语言切换详情页语言。
+- 支持其它系统应用跨应用跳转至详情页。
 
-- 服务卡片：支持尺寸为`2*2`；展示技巧短文案与背景图；点击后打开对应详情页。
-- 详情页：以图文展示技巧标题、正文与配图；内容可延伸至状态栏区域。
-- 卡片刷新：卡片支持按日随机刷新；从卡片进入详情并退出后，卡片可按列表顺序切换下一条。
-- 响应式布局：详情页根据设备类型与窗口断点自适应布局；手机采用上下布局，平板在宽屏场景下采用左右分栏。
-- 多语言：可跟随系统语言切换卡片及详情页语言。
-- 跨应用跳转：其它应用可通过显式Want启动`EntryAbility`，在参数中传入`detailLink`打开指定技巧详情。
-
-> **说明：**
-> 桌面是否显示玩机技巧服务卡片，由用户在桌面服务卡片入口中主动添加决定。`tips_list.json`仅决定进入该卡片刷新列表的技巧编号，不会向桌面强制添加卡片。
-
-#### 使用场景
-
-**表1** 使用场景
-
-| 场景 | 说明                                             |
-| --- |------------------------------------------------|
-| 桌面浏览技巧摘要 | 用户添加`2*2`服务卡片后，在桌面查看技巧短文案与背景图。                 |
-| 查看技巧详情 | 用户点击服务卡片，进入详情页阅读标题、正文与配图。                      |
-| 定时轮换技巧 | 服务卡片按`updateDuration`配置定时刷新，从内容池中随机展示技巧。       |
-| 顺序切换技巧 | 用户从服务卡片进入详情并退出后，卡片切换至列表中的下一条技巧。                |
-| 跨应用打开指定技巧 | 其它应用通过Want传入`detailLink`，直接打开对应详情页。            |
-| 扩展技巧资源 | 开发者在`rawfile`下新增技巧目录，并按需将编号写入`tips_list.json`。 |
-
-#### 支持的设备
-
-**表2** 支持的设备与运行条件
-
-| 项目 | 说明                                                                      |
-| --- |-------------------------------------------------------------------------|
-| 产品入口 | 仅构建`product/phone`；模块名为`entry`；应用包名为`com.ohos.tips`。                    |
-| 设备类型声明 | `product/phone/src/main/module.json5`中`deviceTypes`为`default`、`tablet`。 |
-| 手机 | 详情页默认上下布局；服务卡片尺寸为`2*2`。                                                 |
-| 平板 | 横向断点大于或等于`840vp`时详情页为左右分栏；无独立`product/pad`模块。                |
-| 运行环境 | OpenHarmony标准系统，以系统预置应用方式部署。                                            |
-| 服务卡片尺寸 | 仅支持`2*2`。                      |
+**服务卡片**
+- 支持卡片式内容浏览，提供`2*2`尺寸卡片，展示技巧短文案与背景图。
+- 支持点击服务卡片进入对应详情页，展示对应标题、正文与配图。
+- 支持每日随机刷新，展示每日技巧。
+- 支持按序刷新，从卡片进入详情并退出后，可按卡片列表顺序切换至下一条。
+- 支持跟随系统语言切换卡片文案语言。
+- 支持新增玩机技巧，在`rawfile`下新增技巧目录并配置详情与卡片资源，需要桌面卡片展示时需要将编号写入`tips_list.json`。
 
 ### 架构说明
 
-玩机技巧工程按可复用程度划分为产品层（product）、特性层（feature）、公共层（common）。可部署产物为1个entry类型HAP（`com.ohos.tips`）。特性与公共能力以HAR模块提供，由产品层组装。当前仅提供`product/phone`产品入口。
+玩机技巧采用分层与模块化设计，按产品形态、业务特性与公共能力组织代码，如图：
 
 **图1** 玩机技巧分层架构
 
 ![玩机技巧分层架构](./docs/figures/tips_architecture.png)
 
-**表3** 分层职责
+### 应用层分层设计
 
-| 层级 | 路径 | 职责 |
-| --- | --- | --- |
-| 产品层 | `product/phone` | 承载Ability生命周期、Want解析、服务卡片接入；声明`module.json5`、`form_config.json`、`router_map.json`；提供页面与Form；存放技巧内容`rawfile`；组装特性层与公共层并输出HAP。 |
-| 特性层 | `feature/tips_form`、`feature/tips_detail` | `tips_form`提供卡片编排、转换、模型与卡片UI；`tips_detail`提供详情页UI、转换、模型与响应式布局。 |
-| 公共层 | `common` | `util`提供窗口、语言、日志等工具；`resource`提供`RawFileResourceUtil`；`model`提供跨特性共享常量与实体。 |
+整体可划分为产品层、特性层、公共层：
+
+| 层次 | 主要目录/组件 | 说明                                              |
+| --- | --- |-------------------------------------------------|
+| 产品层 | `product` | 支持手机、平板形态                                       |
+| 特性层 | `feature/tips_form`、`feature/tips_detail` | 服务卡片、详情页                                        |
+| 公共层 | `common/util`、`common/resource`、`common/model` | util（窗口断点、语言、日志）、resource（rawfile资源读取）、model（跨特性常量与实体） |
 
 依赖方向约束如下：
 
@@ -67,116 +45,39 @@
 - 公共层不依赖产品层或特性层。
 - `tips_form`与`tips_detail`之间不互相依赖。
 
-玩机技巧与桌面、其它应用的协作关系如下：
+**特性层模块说明**：
 
-1. 用户添加服务卡片后，`EntryFormAbility`处理添加、更新与刷新；`FormPresenter`读取`rawfile`并更新卡片。
-2. 用户点击服务卡片时，通过FormLink启动`EntryAbility`，携带`detailLink`打开对应详情页。
-3. 其它应用可通过显式Want启动`EntryAbility`，传入`detailLink`打开指定详情页。
+| 核心能力 | 模块          | 说明 |
+| --- |-------------| --- |
+| 详情页 | tips_detail | 沉浸式图文展示、响应式布局、语言切换、跨应用打开 |
+| 服务卡片 | tips_ form       | 卡片浏览与跳转、随机/按序刷新、语言切换、技巧扩展 |
 
-**图2** Ability与界面协作关系
+**公共层模块说明**：
 
-![玩机技巧Ability与界面协作关系](./docs/figures/tips_ability.png)
+| 核心能力 | 模块       | 说明 |
+| --- |----------| --- |
+| 数据模型 | model    | 跨特性常量与内容实体 |
+| 资源读取 | resource | rawfile读取与图片转码 |
+| 通用工具 | util     | 窗口断点、语言切换、日志与上下文 |
 
-**表4** 主数据流
+### 与其他应用的关系
 
-| 流程 | 入口 | 处理链路 | 结果 |
-| --- | --- | --- | --- |
-| 打开详情 | Want或FormLink携带`detailLink` | `EntryAbility` → AppStorage（`detail_link`） → 详情页 | 加载`rawfile/{id}/detail.json`与配图并展示 |
-| 添加或刷新卡片 | 桌面添加或定时更新 | `EntryFormAbility` → `FormPresenter` | 读取`tips_list.json`与`rawfile/{id}/tip.json`，刷新服务卡片 |
-
-**表5** 产品层模块
-
-| 模块 | 路径 | 说明 |
-| -- | --- | --- |
-| 主入口 | `product/phone/src/main/ets/entryability/` | `EntryAbility`：Want解析、详情跳转、页面加载 |
-| 服务卡片入口 | `product/phone/src/main/ets/entryformability/` | `EntryFormAbility`：卡片添加、更新、移除、语言刷新 |
-| 页面 | `product/phone/src/main/ets/pages/` | `Index`；`DetailPage`（`router_map`入口，UI位于`feature/tips_detail`） |
-| Form | `product/phone/src/main/ets/widget/pages/` | `WidgetCard`（`form_config`入口，UI位于`feature/tips_form`） |
-| 配置与资源 | `AppScope/`、`module.json5`、`rawfile` | 应用包名、Ability导出、Form配置、技巧内容资源 |
-
-**表6** 特性层模块
-
-| 模块 | 路径 | 说明 |
-| --- | --- | --- |
-| 服务卡片特性 | `feature/tips_form`（`@ohos/tips_form`） | `FormPresenter`、`TipsConvert`、卡片模型与实体、`WidgetCardView` |
-| 详情特性 | `feature/tips_detail`（`@ohos/tips_detail`） | `DetailPage`、`DetailPageConvert`、响应式布局、`EnvironmentProp` |
-
-**表7** 公共层模块
-
-| 模块 | 路径 | 说明 |
-| --- | --- | --- |
-| model | `common/src/main/ets/default/model/` | `DetailPageConstant`、`DetailPageContentEntity` |
-| resource | `common/src/main/ets/default/resource/` | `RawFileResourceUtil` |
-| util | `common/src/main/ets/default/util/` | 窗口断点、语言、日志、`ContextHelper`、`StringUtil` |
-
-**表8** 模块依赖关系
-
-| 依赖方 | 被依赖方 |
-| --- | --- |
-| `product/phone`（entry HAP） | `@ohos/tips_form`、`@ohos/tips_detail`、`@ohos/common` |
-| `feature/tips_form` | `@ohos/common` |
-| `feature/tips_detail` | `@ohos/common` |
-| `common` | _ |
-
-## 目录
-
-```text
-openharmonytips
-├── AppScope                                    # 应用级配置与多语言资源
-├── common                                      # 公共层HAR（@ohos/common，模块名tips_common）
-│   └── src/main/ets/default
-│       ├── model                               # 跨特性常量与实体
-│       ├── resource                            # RawFileResourceUtil
-│       └── util                                # 窗口、语言、日志等工具
-├── feature
-│   ├── tips_form                               # 服务卡片特性HAR（@ohos/tips_form）
-│   └── tips_detail                             # 详情特性HAR（@ohos/tips_detail）
-├── product
-│   └── phone                                   # 产品层唯一entry HAP
-│       └── src/main
-│           ├── ets
-│           │   ├── entryability                # EntryAbility
-│           │   ├── entryformability            # EntryFormAbility
-│           │   ├── pages                       # 页面组件
-│           │   └── widget/pages                # 卡片组件
-│           ├── resources
-│           │   ├── base/profile                # form_config、main_pages、router_map
-│           │   └── rawfile                     # 技巧资源
-│           └── module.json5                    # Ability与Form声明
-├── hvigor                                      # 构建工具配置
-├── signature                                   # 签名
-├── oh-package.json5
-├── README-zh.md
-└── README.md
-```
-
-## 约束
-
-**表9** 运行与开发约束
-
-| 约束项 | 说明                                                                                   |
-| --- |--------------------------------------------------------------------------------------|
-| 开发语言 | ArkTS；UI基于ArkUI Stage模型。                                                             |
-| 运行形态 | 系统预置应用（`com.ohos.tips`）。                                                             |
-| 设备类型 | `deviceTypes`为`default`、`tablet`；无独立`product/pad`模块。                                 |
-| 服务卡片尺寸 | 仅支持`2*2`。                                                                            |
-| 跨应用跳转 | `EntryAbility`须保持`exported`为`true`；Want须通过`parameters.params` JSON字符串携带`detailLink`。 |
+| 项目 | 说明                                                                                                                                      |
+| --- |-----------------------------------------------------------------------------------------------------------------------------------------|
+| 是否允许其他应用调用 | 允许。`EntryAbility`声明`exported`为`true`，其它系统应用可通过显式Want拉起                                                                                  |
+| 谁能调用 | 仅系统应用可调用，可通过显式Want启动；桌面可通过服务卡片FormLink拉起                                                                                          |
+| 什么时候能调用 | 应用预置或安装后即可调用，打开详情页无需额外运行时权限                                                                                                             |
+| 支持的Want参数 | `bundleName`为`com.ohos.tips`，`abilityName`为`EntryAbility`；须通过`parameters.params` JSON字符串携带`detailLink`（取值与`rawfile`子目录名一致），可选携带`formId` |
+| 跨进程服务 | 无对外RPC数据服务；跨应用仅支持通过Want打开指定详情页                                                                                                          |
 
 ## 编译构建
 
-**图3** 玩机技巧编译部署
-
-![玩机技巧编译部署](./docs/figures/tips_build.png)
-
-### 确认构建产物组成
-
-目的：明确本工程由1个entry HAP与3个HAR组装而成，避免按单模块路径查找源码。
+本工程为多模块 HAP 应用工程，使用 Hvigor 构建，产物为 `com.ohos.tips` 系统应用包。
 
 - 产品层entry模块（`product/phone`）编译为可部署的HAP。
 - 特性HAR（`tips_form`、`tips_detail`）与公共HAR（`tips_common`）先编译为HAR，再由产品层依赖打包进HAP。
-- 模块依赖关系见**表8**。
 
-Ability与Form入口在`product/phone/src/main/module.json5`中声明（节选）：
+Ability与Form入口在`product/phone/src/main/module.json5`中声明：
 
 ```json
 {
@@ -205,12 +106,11 @@ Ability与Form入口在`product/phone/src/main/module.json5`中声明（节选�
   }
 }
 ```
-### 执行HAP编译
 
-目的：在本地生成可安装的HAP，用于联调或合入系统镜像前的验证。
-
-> **须知：**
-> 请使用与工程`build-profile.json5`匹配的DevEco Studio及OpenHarmony SDK。
+### 环境要求
+- OpenHarmony SDK（本工程 `compileSdkVersion` 为 23，`compatibleSdkVersion` / `targetSdkVersion` 为 20）
+- DevEco Studio 或命令行 Hvigor 工具链
+- 系统签名证书（见 `signature/`）
 
 在工程根目录执行：
 
@@ -218,209 +118,288 @@ Ability与Form入口在`product/phone/src/main/module.json5`中声明（节选�
 # 使用DevEco Studio打开工程后执行Build，或使用hvigor命令行
 hvigorw assembleHap
 ```
-正确标准：构建成功，并在`product/phone/build`输出目录生成HAP产物。
 
-若作为OpenHarmony系统部件合入源码树，按平台统一构建方式将本应用作为预置系统应用打包进镜像，部署路径为设备`/system/app`。
+构建成功后在`product/phone/build`输出目录生成HAP产物。
 
-## 使用方法
+## 玩机技巧开发
 
-### 调整已有业务模块
+玩机技巧采用ArkTS语言开发，UI基于ArkUI Stage模型。应用通过`EntryAbility`承载主界面与跨应用跳转，通过`feature/tips_detail`完成详情页展示，通过`feature/tips_form`完成服务卡片编排与刷新，并通过`common`提供窗口、语言、日志与`rawfile`读取等公共能力。开发可参考：[ArkUI开发概述](https://gitcode.com/openharmony/docs/blob/master/zh-cn/application-dev/ui/arkts-ui-development-overview.md)
 
-目的：在分层架构下定位并修改卡片或详情相关代码。
+### 基于已有模块的开发
 
-常用修改入口如下。
+适用场景：对已有能力做功能定制，例如调整详情页布局与文案展示、修改卡片刷新策略、通过`rawfile`新增技巧内容等。
 
-**表10** 常用修改入口
+明确改动点：按业务边界定位到`product/phone`（入口与页面）、`feature/tips_detail`（详情页）、`feature/tips_form`（服务卡片）或`common`（公共能力）。
 
-| 目标     | 路径 |
-|--------| --- |
-| 详情页UI  | `feature/tips_detail/src/main/ets/default/view/DetailPage.ets` |
+以下列举一些常见的修改场景：
+
+**场景1：修改详情页链路**
+   - 页面UI位于`feature/tips_detail/src/main/ets/default/view/DetailPage.ets`
+   - 内容转换位于`feature/tips_detail/src/main/ets/default/convert/DetailPageConvert.ets`
+   - 响应式布局位于`feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets`
+
+例如，需调整详情页默认编号或语言选择逻辑，可在`DetailPageConvert.idToModel()`中扩展：
+```typescript
+    // DetailPageConvert.ets
+    static idToModel(pageId: string, context: common.Context): DetailPageModel {
+      const model: DetailPageModel = new DetailPageModel();
+      const resolvedId = pageId || DetailPageConstant.DEFAULT_PAGE_ID;
+      const rawFilePath = `${resolvedId}/${DetailPageConstant.DETAIL_JSON}`;
+      const entity = RawFileResourceUtil.readJsonSync<DetailPageEntity>(context, rawFilePath);
+      // 【修改点】在此扩展默认编号、缺省回退或语言选择逻辑
+      ...
+      return model;
+    }
+```
+
+**场景2：修改服务卡片链路**
+   - 卡片业务位于`feature/tips_form/src/main/ets/default/presenter/FormPresenter.ets`
+   - 内容转换位于`feature/tips_form/src/main/ets/default/convert/TipsConvert.ets`
+   - 卡片UI位于`feature/tips_form/src/main/ets/default/view/WidgetCard.ets`
+
+例如，需调整点击跳转参数，可在`WidgetCardView`的FormLink中扩展：
+```typescript
+    // WidgetCard.ets
+    FormLink({
+      action: this.actionType,
+      abilityName: this.abilityName,
+      params: {
+        formId: this.formId,
+        detailLink: this.detailLink,
+      }
+    }) {
+      // 卡片UI
+    }
+```
+
+**场景3：修改刷新链路**
+   - 按序刷新位于`FormPresenter.updateForm()`（从卡片进入详情后切换下一条）
+   - 定时随机刷新位于`FormPresenter.randomRefreshForm()`（由`EntryFormAbility.onUpdateForm`触发）
+   - 卡片列表来源于`rawfile/tips_list.json`
+
+例如，需调整按序刷新的下一索引计算，可在`FormPresenter.updateForm()`中修改：
+```typescript
+    // FormPresenter.ets 
+    public updateForm(formId: string): void {
+      ...
+      let nextIndex = (this.currentIndex + 1) % this.tipsCount;
+      // 【修改点】可改为倒序、跳过指定编号或按自定义规则选取 tipId
+      let tipId = this.tipIds[nextIndex];
+      let nextTip = this.loadTipEntity(tipId, ctx);
+      ...
+    }
+```
+
+**场景4：扩展玩机技巧内容**
+   - 资源目录位于`product/phone/src/main/resources/rawfile/`
+   - 详情页与服务卡片共用同一技巧编号目录
+   - `detail.json`中配置详情页内容，`tip.json`中配置卡片内容，`tips_list.json`决定编号是否进入卡片展示列表
+   - 注意：仅添加详情页时，只需`detail.json`与配图，不提供`tip.json`且**不要**写入`tips_list.json`，通过Want携带`detailLink`即可打开；添加卡片时，须在详情资源基础上补充`tip.json`与卡片背景，并将编号写入`tips_list.json`，用户添加桌面服务卡片后方可展示并跳转详情
+
+例如，新增`tip_demo`时，目录与配置示例如下：
+
+```json
+    product/phone/src/main/resources/rawfile/
+    ├── tips_list.json              # 卡片内容池ID列表
+    └── tip_demo/
+        ├── detail.json             # 详情页内容（必需）
+        ├── tip.json                # 卡片内容（需要桌面卡片时配置）
+        ├── tip_demo.png            # 详情配图（必需）
+        └── card_bg.jpg             # 卡片背景图（需要桌面卡片时配置）
+```
+
+`detail.json` 为详情页资源配置文件，必须提供
+```json
+    // tip_demo/detail.json 
+    {
+      "id": "tip_demo",
+      "image": "tip_demo.png",
+      "title": {
+        "zh": "示例技巧标题",
+        "en": "Sample tip title"
+      },
+      "content": {
+        "zh": "这里是详情页中文正文。",
+        "en": "Detail page body in English."
+      }
+    }
+```
+`tip.json` 为卡片资源配置文件，仅添加详情页时不提供，添加卡片时必须提供
+```json
+    // tip_demo/tip.json
+    {
+      "tipBgImage": "card_bg.jpg",
+      "tipDesc": {
+        "zh": "示例卡片短文案",
+        "en": "Sample card description"
+      },
+      "detailLink": "tip_demo"
+    }
+```
+`tips_list.json` 用于配置需要展示的卡片列表，仅添加详情页时不要写入编号，添加卡片时必须追加编号
+```json
+    // tips_list.json — 仅添加详情页时不要写入；添加卡片时必须追加编号
+    ["tip_openharmony", "tip_calendar", "tip_play_tips", "tip_demo"]
+```
+**场景5：修改UI组件**
+   - 详情页UI位于`feature/tips_detail/src/main/ets/default/view/DetailPage.ets`
+   - 卡片UI位于`feature/tips_form/src/main/ets/default/view/WidgetCard.ets`
+   - 详情响应式布局位于`feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets`
+
+例如，需调整卡片标题样式，可在`widgetInfoBuilder()`中修改：
+```typescript
+    // WidgetCard.ets 
+    Text(this.widgetTitle)
+      .fontSize($r('sys.float.ohos_id_text_size_headline9'))
+      .fontWeight(FontWeight.Bold)
+      .maxLines(1)
+      .textOverflow({ overflow: TextOverflow.Ellipsis })
+      .fontColor($r('sys.color.ohos_fa_text_primary_dark'))
+      .layoutWeight(1)
+```
+
+常用修改入口：
+
+| 目标 | 路径 |
+| --- | --- |
+| 详情页UI | `feature/tips_detail/src/main/ets/default/view/DetailPage.ets` |
 | 详情内容转换 | `feature/tips_detail/src/main/ets/default/convert/DetailPageConvert.ets` |
-| 响应式布局  | `feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets` |
-| 卡片业务   | `feature/tips_form/src/main/ets/default/presenter/FormPresenter.ets` |
+| 响应式布局 | `feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets` |
+| 卡片业务 | `feature/tips_form/src/main/ets/default/presenter/FormPresenter.ets` |
 | 卡片内容转换 | `feature/tips_form/src/main/ets/default/convert/TipsConvert.ets` |
-| 卡片UI   | `feature/tips_form/src/main/ets/default/view/WidgetCard.ets` |
-| 首页路由   | `product/phone/src/main/ets/pages/Index.ets` |
-| 卡片组件   | `product/phone/src/main/ets/widget/pages/WidgetCard.ets` |
+| 卡片UI | `feature/tips_form/src/main/ets/default/view/WidgetCard.ets` |
+| 首页路由 | `product/phone/src/main/ets/pages/Index.ets` |
+| 卡片Form | `product/phone/src/main/ets/widget/pages/WidgetCard.ets` |
+| 技巧内容资源 | `product/phone/src/main/resources/rawfile/` |
 
-正确标准：修改后重新编译安装，目标界面或卡片行为符合预期。
+### 新特性能力的开发
 
-### 新增一条玩机技巧
+适用场景：新增详情或卡片相关能力、扩展卡片尺寸与刷新策略、补充差异化交互，或适配新设备形态。
 
-目的：在不改UI代码的前提下，通过`rawfile`扩展技巧内容。
+> **说明：**
+> 当前工程采用`product + feature + common`多模块结构，产品入口主要在`product/phone`。新能力一般按现有分层扩展；若新增产品形态HAP，可在`product/`下增加对应目录并在`build-profile.json5`中注册。
 
-资源目录约定：
+**步骤1：扩展业务能力**
+
+1. 在`feature/tips_detail`中补充详情页UI、转换或响应式布局逻辑。
+2. 在`feature/tips_form`中补充卡片编排、转换或`WidgetCardView`展示逻辑。
+3. 如涉及公共能力，在`common`中扩展常量、`rawfile`读取或窗口/语言工具，并由特性层引用。
+4. 如涉及产品入口，在`product/phone`的`EntryAbility`、`EntryFormAbility`、`pages/`或`widget/pages/`中同步扩展。
+5. 如仅扩展技巧内容，按上一节「扩展技巧内容」在`rawfile`新增目录，并按需更新`tips_list.json`。
+
+**步骤2：配置/确认Ability入口**
+
+本工程入口已在`product/phone/src/main/module.json5`中声明，扩展能力时通常只需确认Ability、Form与`exported`配置是否满足新场景：
+
+```json
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "mainElement": "EntryAbility",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ],
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "exported": true
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "EntryFormAbility",
+        "srcEntry": "./ets/entryformability/EntryFormAbility.ets",
+        "type": "form"
+      }
+    ]
+  }
+}
+```
+
+**步骤3：定制UI**
+
+在完成业务能力与Ability配置后，按上一节对「已有模块的功能修改与裁剪」中的详情页、服务卡片或产品入口修改方式扩展即可。
+
+若需新增独立页面：
+
+1. 在对应模块新增页面或`@Builder`入口文件；
+2. 如需系统路由注册，在`resources/base/profile/router_map.json`中声明，并由产品层`pages/`提供Builder；
+3. 由`Index`的`Navigation`、`pushPathByName`或Want路由拉起。
+
+若需扩展服务卡片：
+
+1. 在`feature/tips_form`扩展卡片UI与`FormPresenter`刷新逻辑；
+2. 在`product/phone`的`widget/pages/`保留Form入口，并同步更新`form_config.json`中的尺寸或刷新配置；
+3. 在桌面服务卡片入口添加卡片后验证展示与点击跳转。
+
+## 目录
 
 ```text
-product/phone/src/main/resources/rawfile/
-├── tips_list.json              # 卡片内容池ID列表
-├── tip_openharmony/
-│   ├── detail.json             # 详情页内容（必需）
-│   ├── tip.json                # 卡片内容（需要桌面卡片时配置）
-│   ├── tip_openharmony.png     # 详情配图（必需）
-│   └── card_bg.jpg             # 卡片背景图（需要桌面卡片时配置）
-└── tip_calendar/
-    └── ...
+openharmonytips
+├─AppScope                                      # 应用级配置与多语言资源
+│  ├─app.json5                                  # bundleName、版本号等
+│  └─resources/                                 # 全局字符串 / 图标等资源
+├─common                                        # 公共能力层
+│  └─src/main/ets/default/
+│     ├─model/                                  # 公共数据模型，包括详情页常量、内容实体等
+│     ├─resource/                               # rawfile资源读取，包括json资源读取与图片转码等
+│     └─util/                                   # 通用工具，包括窗口断点、语言切换、日志与上下文等
+├─feature                                       # 特性层
+│  ├─tips_form/                                 # 服务卡片特性
+│  │  └─src/main/ets/default/
+│  │     ├─convert/                             # 卡片内容转换，包括json解析与模型转换等
+│  │     ├─entity/                              # 卡片实体，包括技巧短文案与背景等数据
+│  │     ├─model/                               # 卡片模型，包括技巧数据、卡片参数、跳转参数等数据实体
+│  │     ├─presenter/                           # 卡片业务逻辑，包括添加刷新、随机/按序切换等
+│  │     └─view/                                # 卡片UI
+│  └─tips_detail/                               # 详情页特性
+│     └─src/main/ets/default/
+│        ├─common/                              # 详情页工具，包括环境属性等
+│        ├─convert/                             # 详情内容转换，包括详情数据解析与模型转换等
+│        ├─entity/                              # 详情实体，包括标题、正文与配图等数据
+│        ├─model/                               # 详情模型，包括标题、正文与配图等展示数据
+│        ├─util/                                # 响应式布局，包括手机上下布局、平板左右分栏等
+│        └─view/                                # 详情页UI，包括沉浸式图文展示等
+├─product                                       # 产品层
+│  └─phone/                                     # 手机 / 平板形态 HAP
+│     └─src/main/
+│        ├─ets/
+│        │  ├─entryability/                     # 应用主入口
+│        │  ├─entryformability/                 # 服务卡片生命周期管理
+│        │  ├─pages/                            # 页面入口
+│        │  └─widget/pages/                     # 卡片组件入口
+│        ├─resources/
+│        │  ├─base/profile/                     # 配置文件
+│        │  └─rawfile/                          # 技巧资源
+│        └─module.json5                         # Ability与Form声明
+├─hvigor                                        # 构建工具配置
+├─signature                                     # 签名证书与profile
+├─build-profile.json5                           # 工程级SDK / 签名 / product配置
+├─oh-package.json5
+├─OAT.xml                                       # 开源合规审计
+├─LICENSE
+├─README.md                                     # 英文说明文档
+└─README-zh.md                                  # 中文说明文档
 ```
-**表11** 技巧资源字段
 
-| 文件 | 关键字段 | 说明                                   |
-| --- | --- |--------------------------------------|
-| detail.json | `id`、`image`、`title`、`content` | `id`与目录名一致；`title`与`content`为`{zh,en}` |
-| tip.json | `tipBgImage`、`tipDesc`、`detailLink` | 仅卡片场景需要；`detailLink`指向详情编号           |
-| tips_list.json | string数组 | 仅列入的ID参与桌面卡片展示                       |
+## 约束
 
-步骤：
+- **语言版本**：ArkTS
+- **运行形态**：系统预置应用（`com.ohos.tips`）
+- **设备类型**：手机、平板
+- **服务卡片尺寸**：仅支持`2*2`
+- **跨应用跳转**：仅系统应用可进行跨应用跳转；`EntryAbility`须保持`exported`为`true`；Want须通过`parameters.params` JSON字符串携带`detailLink`（取值与`rawfile`子目录名一致）
+- **形态适配**：手机默认上下布局，平板在宽屏场景（横向断点大于或等于`840vp`）下为左右分栏；修改UI时需覆盖手机与平板验证
 
-1. 在`rawfile`下新建`{编号}/`目录（例如`tip_demo`），用于存放该技巧全部资源。
-2. 至少放入`detail.json`及详情配图，用于详情页与跨应用跳转展示。
-3. 若仅需详情页或跨应用跳转、不展示桌面卡片：不要将编号写入`tips_list.json`，可不提供`tip.json`。
-4. 若需要桌面卡片展示：补充`tip.json`与卡片背景图，并在`tips_list.json`末尾追加编号。
-
-详情与卡片完整示例如下：
-
-```json
-// tip_demo/detail.json
-{
-  "id": "tip_demo",
-  "image": "tip_demo.png",
-  "title": {
-    "zh": "示例技巧标题",
-    "en": "Sample tip title"
-  },
-  "content": {
-    "zh": "这里是详情页中文正文。",
-    "en": "Detail page body in English."
-  }
-}
-```
-```json
-// tip_demo/tip.json
-{
-  "tipBgImage": "card_bg.jpg",
-  "tipDesc": {
-    "zh": "示例卡片短文案",
-    "en": "Sample card description"
-  },
-  "detailLink": "tip_demo"
-}
-```
-```json
-// tips_list.json（追加tip_demo）
-["tip_openharmony", "tip_calendar", "tip_play_tips", "tip_demo"]
-```
-正确标准：
-
-- 仅详情：通过Want传入对应`detailLink`可打开详情页。
-- 含卡片：用户添加服务卡片后，新编号出现在待展示的卡片列表中，点击可进入对应详情。
-
-**表12** 是否展示服务卡片
-
-| 诉求         | detail.json与配图 | tip.json与卡片背景 | 是否写入tips_list.json |
-|------------| --- | --- | --- |
-| 仅详情或仅跨应用跳转 | 需要 | 不需要 | 否 |
-| 详情与桌面卡片展示  | 需要 | 需要 | 是 |
-
-## 说明
-
-### 接口说明
-
-本节仅列出跨应用打开玩机技巧详情页时需使用的Want参数，便于其它应用对接。
-
-**表13** 跨应用跳转Want参数
-
-| 配置项 | 取值 | 说明 |
-| --- | --- | --- |
-| `bundleName` | `com.ohos.tips` | 玩机技巧应用包名 |
-| `abilityName` | `EntryAbility` | 主Ability名称 |
-| `parameters.params` | JSON字符串 | 须包含`detailLink`，取值与`rawfile`子目录名一致 |
-
-调用示例（ArkTS）：
-
-```typescript
-import { common, Want } from '@kit.AbilityKit';
-import { BusinessError } from '@kit.BasicServicesKit';
-
-private launchTipsDetail(detailLink: string): void {
-  const context = this.getUIContext().getHostContext() as common.UIAbilityContext;
-  const want: Want = {
-    bundleName: 'com.ohos.tips',
-    abilityName: 'EntryAbility',
-    parameters: {
-      // 必须是JSON字符串；detailLink对应rawfile子目录名
-      params: JSON.stringify({ detailLink: detailLink })
-    }
-  };
-  context.startAbility(want).catch((err: BusinessError) => {
-    console.error(`startAbility failed, code: ${err.code}, message: ${err.message}`);
-  });
-}
-
-// 例如跳转到test详情页（工程内已有rawfile/test/detail.json）
-this.launchTipsDetail('test');
-```
-Want参数结构示意：
-
-```json
-{
-  "bundleName": "com.ohos.tips",
-  "abilityName": "EntryAbility",
-  "parameters": {
-    "params": "{\"detailLink\":\"test\"}"
-  }
-}
-```
-### 使用说明
-
-#### 浏览桌面服务卡片
-
-目的：在桌面查看技巧摘要。
-
-1. 在设备桌面的服务卡片入口中添加玩机技巧卡片（尺寸`2*2`）。
-2. 查看卡片展示的短文案与背景图。
-
-正确标准：卡片正常显示，并可点击进入详情。
-
-#### 查看技巧详情
-
-目的：阅读完整图文说明。
-
-1. 点击桌面服务卡片，或由其它应用通过Want传入`detailLink`启动`EntryAbility`。
-2. 在详情页阅读标题、正文与配图。
-
-正确标准：展示内容与`rawfile/{detailLink}/detail.json`及配图一致；宽屏断点下可为左右分栏。
-
-#### 卡片跳转FormLink说明
-
-目的：理解卡片点击如何拉起详情页。
-
-卡片UI实现位于`feature/tips_form`的`WidgetCardView`，通过FormLink携带`detailLink`与`formId`：
-
-```typescript
-// feature/tips_form/src/main/ets/default/view/WidgetCard.ets
-FormLink({
-  action: this.actionType,
-  abilityName: this.abilityName,
-  params: {
-    formId: this.formId,
-    detailLink: this.detailLink,
-  }
-}) {
-  // 卡片UI
-}
-```
 ## 参考文献
 
 欢迎广大开发者贡献代码、文档等，具体的贡献流程和方式请参见[参与贡献](https://gitcode.com/openharmony/docs/blob/master/zh-cn/contribute/%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE.md)。
 
 ## 相关仓
 
-[**ability_form_fwk**](https://gitcode.com/openharmony/ability_form_fwk)
+[**applications_settings**](https://gitcode.com/openharmony/applications_settings)
 
-[**arkui_ace_engine**](https://gitcode.com/openharmony/arkui_ace_engine)
-
-[**arkui_ui_appearance**](https://gitcode.com/openharmony/arkui_ui_appearance)
-
-[**ability_base**](https://gitcode.com/openharmony/ability_ability_base)
-
-[**ability_runtime**](https://gitcode.com/openharmony/ability_ability_runtime)
+[**window_scene_board**](https://gitcode.com/openharmony/window_scene_board)

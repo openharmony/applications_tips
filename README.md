@@ -2,63 +2,41 @@
 
 ## Introduction
 
-### Content Overview
+**Tips** (bundle name: `com.ohos.tips`) is a preinstalled **system application** in OpenHarmony. It provides device usage tips to users through service widgets and detail pages, and adapts to phone and tablet form factors.
 
-Tips (bundle name: `com.ohos.tips`) is a preinstalled system application on the OpenHarmony standard system. At the system application layer, it provides browsing and display of device usage tips for end users. It presents image-and-text content immersively on the detail page, and supports system language switching and cross-application navigation.
+### Core Capabilities
 
-#### Core Features
+**Detail page**
+- Supports displaying tip title, body, and image on the detail page; the content area extends into the status bar for an immersive interaction experience.
+- Supports responsive layout that adapts by device type and window breakpoint; phones use a top-bottom layout, and tablets use a left-right split in wide-screen scenarios.
+- Supports following the system language to switch the detail page language.
+- Supports cross-application navigation from other system applications to the detail page.
 
-- Service widget: size `2*2`; displays short tip text and a background image; opens the matching detail page on tap.
-- Detail page: presents tip title, body, and image; content can extend into the status bar area.
-- Widget refresh: supports random daily rotation; after opening detail from the widget and exiting, the widget can switch to the next tip in list order.
-- Responsive layout: the detail page adapts by device type and window breakpoint; phones use a top-bottom layout; tablets use a left-right split in wide-screen scenarios.
-- Locales: card and detail page languages can follow the system language.
-- Cross-application navigation: other applications can start `EntryAbility` with an explicit Want and pass `detailLink` in parameters to open a specified tip detail.
-
-> **Note:**
-> Whether the Tips service widget appears on the desktop depends on the user adding it from the desktop service-widget entry. `tips_list.json` only decides which tip IDs enter the widget refresh list. It does not force a widget onto the desktop.
-
-#### Usage Scenarios
-
-**Table 1** Usage scenarios
-
-| Scenario | Description |
-| --- | --- |
-| Browse tip summaries on the desktop | After adding the `2*2` service widget, the user views short tip text and a background image on the desktop. |
-| View tip details | The user taps the service widget and opens the detail page to read the title, body, and image. |
-| Rotate tips on a schedule | The service widget refreshes per `updateDuration` and randomly displays a tip from the content pool. |
-| Switch tips in sequence | After the user opens detail from the service widget and exits, the widget switches to the next tip in the list. |
-| Open a specified tip across applications | Another application passes `detailLink` through Want and opens the matching detail page. |
-| Extend tip resources | Developers add a tip directory under `rawfile` and, as needed, append its ID to `tips_list.json`. |
-
-#### Supported Devices
-
-**Table 2** Supported devices and runtime conditions
-
-| Item | Description |
-| --- | --- |
-| Product entry | Builds only `product/phone`; module name is `entry`; bundle name is `com.ohos.tips`. |
-| Declared device types | In `product/phone/src/main/module.json5`, `deviceTypes` are `default` and `tablet`. |
-| Phone | Detail page defaults to a top-bottom layout; service widget size is `2*2`. |
-| Tablet | When the horizontal breakpoint is greater than or equal to `840vp`, the detail page uses a left-right split; no separate `product/pad` module. |
-| Runtime | OpenHarmony standard system; deployed as a preinstalled system application. |
-| Service widget size | Only `2*2` is supported. |
+**Service widget**
+- Supports card-style content browsing, provides a `2*2` widget that displays short tip text and a background image.
+- Supports tapping the service widget to open the matching detail page and show the corresponding title, body, and image.
+- Supports daily random refresh to display the tip of the day.
+- Supports sequential refresh: after opening detail from the widget and exiting, the widget can switch to the next tip in the widget list order.
+- Supports following the system language to switch the widget text language.
+- Supports adding new tips: add a tip directory under `rawfile` and configure detail and widget resources; to show on the desktop widget, also write the ID into `tips_list.json`.
 
 ### Architecture Description
 
-The Tips project is divided into product, feature, and common layers by reusability. The deployable artifact is one entry-type HAP (`com.ohos.tips`). Feature and common capabilities are provided as HAR modules and assembled by the product layer. Currently only the `product/phone` product entry is provided.
+Tips uses a layered and modular design, organizing code by product form factor, business features, and common capabilities, as shown in the figure:
 
 **Figure 1** Tips layered architecture
 
 ![Tips layered architecture](./docs/figures/tips_architecture_en.png)
 
-**Table 3** Layer responsibilities
+### Application-Layer Layered Design
 
-| Layer | Path | Responsibility |
+The overall structure is divided into product, feature, and common layers:
+
+| Layer | Main directories/components | Description |
 | --- | --- | --- |
-| Product | `product/phone` | Hosts Ability lifecycle, Want parsing, and service-widget integration; declares `module.json5`, `form_config.json`, and `router_map.json`; provides pages and Form; stores tip content in `rawfile`; assembles feature and common layers into the HAP. |
-| Feature | `feature/tips_form`, `feature/tips_detail` | `tips_form` provides widget orchestration, conversion, models, and widget UI; `tips_detail` provides detail-page UI, conversion, models, and responsive layout. |
-| Common | `common` | `util` provides window, language, and logging utilities; `resource` provides `RawFileResourceUtil`; `model` provides cross-feature shared constants and entities. |
+| Product | `product` | Supports phone and tablet form factors |
+| Feature | `feature/tips_form`, `feature/tips_detail` | Service widget, detail page |
+| Common | `common/util`, `common/resource`, `common/model` | util (window breakpoints, language, logging), resource (rawfile reading), model (cross-feature constants and entities) |
 
 Dependency rules:
 
@@ -67,116 +45,39 @@ Dependency rules:
 - The common layer does not depend on the product or feature layers.
 - `tips_form` and `tips_detail` do not depend on each other.
 
-Collaboration among Tips, the desktop, and other applications is as follows:
+**Feature-layer modules**:
 
-1. After the user adds the service widget, `EntryFormAbility` handles add, update, and refresh; `FormPresenter` reads `rawfile` and updates the widget.
-2. When the user taps the service widget, FormLink starts `EntryAbility` with `detailLink` and opens the matching detail page.
-3. Other applications can start `EntryAbility` with an explicit Want and pass `detailLink` to open a specified detail page.
-
-**Figure 2** Ability and UI collaboration
-
-![Tips Ability and UI collaboration](./docs/figures/tips_ability_en.png)
-
-**Table 4** Primary data flows
-
-| Flow | Entry | Processing chain | Result |
-| --- | --- | --- | --- |
-| Open detail | Want or FormLink with `detailLink` | `EntryAbility` → AppStorage (`detail_link`) → detail page | Loads `rawfile/{id}/detail.json` and images for display |
-| Add or refresh widget | Desktop add or scheduled update | `EntryFormAbility` → `FormPresenter` | Reads `tips_list.json` and `rawfile/{id}/tip.json`, then refreshes the service widget |
-
-**Table 5** Product-layer modules
-
-| Module | Path | Description |
+| Core capability | Module | Description |
 | --- | --- | --- |
-| Main entry | `product/phone/src/main/ets/entryability/` | `EntryAbility`: Want parsing, detail navigation, page loading |
-| Service-widget entry | `product/phone/src/main/ets/entryformability/` | `EntryFormAbility`: widget add, update, remove, and language refresh |
-| Page | `product/phone/src/main/ets/pages/` | `Index`; `DetailPage` (`router_map` entry; UI in `feature/tips_detail`) |
-| Form | `product/phone/src/main/ets/widget/pages/` | `WidgetCard` (`form_config` entry; UI in `feature/tips_form`) |
-| Configuration and resources | `AppScope/`, `module.json5`, `rawfile` | Bundle name, Ability export, Form configuration, tip content resources |
+| Detail page | tips_detail | Immersive image-and-text display, responsive layout, language switching, cross-application open |
+| Service widget | tips_form | Widget browsing and navigation, random/sequential refresh, language switching, tip extension |
 
-**Table 6** Feature-layer modules
+**Common-layer modules**:
 
-| Module | Path | Description |
+| Core capability | Module | Description |
 | --- | --- | --- |
-| Service-widget feature | `feature/tips_form` (`@ohos/tips_form`) | `FormPresenter`, `TipsConvert`, widget models and entities, `WidgetCardView` |
-| Detail feature | `feature/tips_detail` (`@ohos/tips_detail`) | `DetailPage`, `DetailPageConvert`, responsive layout, `EnvironmentProp` |
+| Data model | model | Cross-feature constants and content entities |
+| Resource reading | resource | rawfile reading and image transcoding |
+| Common utilities | util | Window breakpoints, language switching, logging, and context |
 
-**Table 7** Common-layer modules
+### Relationship with Other Applications
 
-| Module | Path | Description |
-| --- | --- | --- |
-| model | `common/src/main/ets/default/model/` | `DetailPageConstant`, `DetailPageContentEntity` |
-| resource | `common/src/main/ets/default/resource/` | `RawFileResourceUtil` |
-| util | `common/src/main/ets/default/util/` | Window breakpoints, language, logging, `ContextHelper`, `StringUtil` |
-
-**Table 8** Module dependencies
-
-| Dependent | Dependency |
+| Item | Description |
 | --- | --- |
-| `product/phone` (entry HAP) | `@ohos/tips_form`, `@ohos/tips_detail`, `@ohos/common` |
-| `feature/tips_form` | `@ohos/common` |
-| `feature/tips_detail` | `@ohos/common` |
-| `common` | _ |
-
-## Directory
-
-```text
-openharmonytips
-├── AppScope                                    # App-level config and locale resources
-├── common                                      # Common HAR (@ohos/common, module tips_common)
-│   └── src/main/ets/default
-│       ├── model                               # Cross-feature constants and entities
-│       ├── resource                            # RawFileResourceUtil
-│       └── util                                # Window, language, logging utilities
-├── feature
-│   ├── tips_form                               # Service-widget feature HAR (@ohos/tips_form)
-│   └── tips_detail                             # Detail feature HAR (@ohos/tips_detail)
-├── product
-│   └── phone                                   # Sole product entry HAP
-│       └── src/main
-│           ├── ets
-│           │   ├── entryability                # EntryAbility
-│           │   ├── entryformability            # EntryFormAbility
-│           │   ├── pages                       # Page components
-│           │   └── widget/pages                # Widget components
-│           ├── resources
-│           │   ├── base/profile                # form_config, main_pages, router_map
-│           │   └── rawfile                     # Tip resources
-│           └── module.json5                    # Ability and Form declarations
-├── hvigor                                      # Build tool config
-├── signature                                   # Signing
-├── oh-package.json5
-├── README-zh.md
-└── README.md
-```
-
-## Constraints
-
-**Table 9** Runtime and development constraints
-
-| Constraint | Description |
-| --- | --- |
-| Language | ArkTS; UI is based on the ArkUI Stage model. |
-| Runtime form | Preinstalled system application (`com.ohos.tips`). |
-| Device types | `deviceTypes` are `default` and `tablet`; no separate `product/pad` module. |
-| Service widget size | Only `2*2` is supported. |
-| Cross-application jump | Keep `EntryAbility` `exported` as `true`; Want must carry `detailLink` in the `parameters.params` JSON string. |
+| Whether other applications can call | Allowed. `EntryAbility` declares `exported` as `true`; other system applications can launch it with an explicit Want |
+| Who can call | Only system applications can call; they can start it with an explicit Want; the desktop can launch it through the service-widget FormLink |
+| When it can be called | Can be called after the application is preinstalled or installed; opening the detail page requires no extra runtime permission |
+| Supported Want parameters | `bundleName` is `com.ohos.tips`, `abilityName` is `EntryAbility`; must carry `detailLink` in the `parameters.params` JSON string (the value matches the `rawfile` subdirectory name); optional `formId` |
+| Cross-process services | No external RPC data service; cross-application support is limited to opening a specified detail page through Want |
 
 ## Build
 
-**Figure 3** Tips build and deployment
-
-![Tips build and deployment](./docs/figures/tips_build_en.png)
-
-### Confirm Build Artifacts
-
-Purpose: clarify that this project assembles one entry HAP and three HARs, and avoid searching source under a single-module path.
+This project is a multi-module HAP application built with Hvigor. The artifact is the `com.ohos.tips` system application package.
 
 - The product-layer entry module (`product/phone`) is compiled into a deployable HAP.
 - Feature HARs (`tips_form`, `tips_detail`) and the common HAR (`tips_common`) are compiled first, then packaged into the HAP through product-layer dependencies.
-- Module dependencies are listed in **Table 8**.
 
-Ability and Form entries are declared in `product/phone/src/main/module.json5` (excerpt):
+Ability and Form entries are declared in `product/phone/src/main/module.json5`:
 
 ```json
 {
@@ -206,12 +107,10 @@ Ability and Form entries are declared in `product/phone/src/main/module.json5` (
 }
 ```
 
-### Build the HAP
-
-Purpose: generate an installable HAP locally for debugging or pre-image verification.
-
-> **Notice:**
-> Use DevEco Studio and the OpenHarmony SDK that match `build-profile.json5`.
+### Environment Requirements
+- OpenHarmony SDK (`compileSdkVersion` is 23; `compatibleSdkVersion` / `targetSdkVersion` are 20 in this project)
+- DevEco Studio or the command-line Hvigor toolchain
+- System signing certificates (see `signature/`)
 
 From the project root:
 
@@ -220,19 +119,146 @@ From the project root:
 hvigorw assembleHap
 ```
 
-Success criteria: the build succeeds and a HAP is generated under `product/phone/build`.
+After a successful build, the HAP is generated under `product/phone/build`.
 
-When integrated as an OpenHarmony system component in the source tree, follow the platform unified build and package this application as a preinstalled system application in the image. The on-device path is `/system/app`.
+## Tips Development
 
-## How to Use
+Tips is developed in ArkTS, and the UI is based on the ArkUI Stage model. The application hosts the main UI and cross-application navigation through `EntryAbility`, implements detail display through `feature/tips_detail`, implements service-widget orchestration and refresh through `feature/tips_form`, and provides common capabilities such as window, language, logging, and `rawfile` reading through `common`. For development reference, see: [ArkUI Development Overview](https://gitcode.com/openharmony/docs/blob/master/en/application-dev/ui/arkts-ui-development-overview.md)
 
-### Adjust Existing Feature Modules
+### Development Based on Existing Modules
 
-Purpose: locate and modify widget or detail code under the layered architecture.
+Applicable scenarios: customize existing capabilities, for example adjusting detail-page layout and text display, changing the widget refresh strategy, or adding tip content through `rawfile`.
 
-Common modification entry points are listed below.
+Identify the change point: locate by business boundary to `product/phone` (entry and pages), `feature/tips_detail` (detail page), `feature/tips_form` (service widget), or `common` (common capabilities).
 
-**Table 10** Common modification entry points
+Common modification scenarios are listed below:
+
+**Scenario 1: Modify the detail-page chain**
+   - Page UI is at `feature/tips_detail/src/main/ets/default/view/DetailPage.ets`
+   - Content conversion is at `feature/tips_detail/src/main/ets/default/convert/DetailPageConvert.ets`
+   - Responsive layout is at `feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets`
+
+For example, to adjust the default detail ID or language-selection logic, extend `DetailPageConvert.idToModel()`:
+```typescript
+    // DetailPageConvert.ets
+    static idToModel(pageId: string, context: common.Context): DetailPageModel {
+      const model: DetailPageModel = new DetailPageModel();
+      const resolvedId = pageId || DetailPageConstant.DEFAULT_PAGE_ID;
+      const rawFilePath = `${resolvedId}/${DetailPageConstant.DETAIL_JSON}`;
+      const entity = RawFileResourceUtil.readJsonSync<DetailPageEntity>(context, rawFilePath);
+      // [Change point] Extend default ID, fallback, or language-selection logic here
+      ...
+      return model;
+    }
+```
+
+**Scenario 2: Modify the service-widget chain**
+   - Widget business is at `feature/tips_form/src/main/ets/default/presenter/FormPresenter.ets`
+   - Content conversion is at `feature/tips_form/src/main/ets/default/convert/TipsConvert.ets`
+   - Widget UI is at `feature/tips_form/src/main/ets/default/view/WidgetCard.ets`
+
+For example, to adjust tap-navigation parameters, extend FormLink in `WidgetCardView`:
+```typescript
+    // WidgetCard.ets
+    FormLink({
+      action: this.actionType,
+      abilityName: this.abilityName,
+      params: {
+        formId: this.formId,
+        detailLink: this.detailLink,
+      }
+    }) {
+      // Widget UI
+    }
+```
+
+**Scenario 3: Modify the refresh chain**
+   - Sequential refresh is in `FormPresenter.updateForm()` (switch to the next tip after entering detail from the widget)
+   - Scheduled random refresh is in `FormPresenter.randomRefreshForm()` (triggered by `EntryFormAbility.onUpdateForm`)
+   - The widget list comes from `rawfile/tips_list.json`
+
+For example, to adjust next-index calculation for sequential refresh, modify `FormPresenter.updateForm()`:
+```typescript
+    // FormPresenter.ets 
+    public updateForm(formId: string): void {
+      ...
+      let nextIndex = (this.currentIndex + 1) % this.tipsCount;
+      // [Change point] Change to reverse order, skip specified IDs, or select tipId by custom rules
+      let tipId = this.tipIds[nextIndex];
+      let nextTip = this.loadTipEntity(tipId, ctx);
+      ...
+    }
+```
+
+**Scenario 4: Extend tip content**
+   - Resource directory is at `product/phone/src/main/resources/rawfile/`
+   - The detail page and service widget share the same tip ID directory
+   - Configure detail content in `detail.json`, widget content in `tip.json`, and whether an ID joins the widget display list in `tips_list.json`
+   - Note: when adding detail only, provide `detail.json` and images only; do not provide `tip.json` and do **not** write into `tips_list.json`; open via Want carrying `detailLink`. When adding a widget, supplement `tip.json` and the widget background on top of the detail resources, and write the ID into `tips_list.json`; the tip can be shown and open detail only after the user adds the desktop service widget
+
+For example, when adding `tip_demo`, the directory and configuration are as follows:
+
+```json
+    product/phone/src/main/resources/rawfile/
+    ├── tips_list.json              # Widget content-pool ID list
+    └── tip_demo/
+        ├── detail.json             # Detail content (required)
+        ├── tip.json                # Widget content (configure when desktop widget is needed)
+        ├── tip_demo.png            # Detail image (required)
+        └── card_bg.jpg             # Widget background (configure when desktop widget is needed)
+```
+
+`detail.json` is the detail-page resource configuration file and must be provided
+```json
+    // tip_demo/detail.json 
+    {
+      "id": "tip_demo",
+      "image": "tip_demo.png",
+      "title": {
+        "zh": "示例技巧标题",
+        "en": "Sample tip title"
+      },
+      "content": {
+        "zh": "这里是详情页中文正文。",
+        "en": "Detail page body in English."
+      }
+    }
+```
+`tip.json` is the widget resource configuration file; omit it when adding detail only, and provide it when adding a widget
+```json
+    // tip_demo/tip.json
+    {
+      "tipBgImage": "card_bg.jpg",
+      "tipDesc": {
+        "zh": "示例卡片短文案",
+        "en": "Sample card description"
+      },
+      "detailLink": "tip_demo"
+    }
+```
+`tips_list.json` configures the widget list to display; do not write the ID when adding detail only, and append the ID when adding a widget
+```json
+    // tips_list.json — do not write for detail-only; must append the ID when adding a widget
+    ["tip_openharmony", "tip_calendar", "tip_play_tips", "tip_demo"]
+```
+**Scenario 5: Modify UI components**
+   - Detail-page UI is at `feature/tips_detail/src/main/ets/default/view/DetailPage.ets`
+   - Widget UI is at `feature/tips_form/src/main/ets/default/view/WidgetCard.ets`
+   - Detail responsive layout is at `feature/tips_detail/src/main/ets/default/util/DetailResponsiveLayoutUtil.ets`
+
+For example, to adjust the widget title style, modify `widgetInfoBuilder()`:
+```typescript
+    // WidgetCard.ets 
+    Text(this.widgetTitle)
+      .fontSize($r('sys.float.ohos_id_text_size_headline9'))
+      .fontWeight(FontWeight.Bold)
+      .maxLines(1)
+      .textOverflow({ overflow: TextOverflow.Ellipsis })
+      .fontColor($r('sys.color.ohos_fa_text_primary_dark'))
+      .layoutWeight(1)
+```
+
+Common modification entry points:
 
 | Target | Path |
 | --- | --- |
@@ -243,180 +269,130 @@ Common modification entry points are listed below.
 | Widget conversion | `feature/tips_form/src/main/ets/default/convert/TipsConvert.ets` |
 | Widget UI | `feature/tips_form/src/main/ets/default/view/WidgetCard.ets` |
 | Home routing | `product/phone/src/main/ets/pages/Index.ets` |
-| Widget component | `product/phone/src/main/ets/widget/pages/WidgetCard.ets` |
+| Widget Form | `product/phone/src/main/ets/widget/pages/WidgetCard.ets` |
+| Tip content resources | `product/phone/src/main/resources/rawfile/` |
 
-Success criteria: after rebuild and install, the target UI or widget behavior matches the expected change.
+### Developing New Feature Capabilities
 
-### Add a New Tip
+Applicable scenarios: add detail or widget related capabilities, extend widget sizes and refresh strategies, supplement differentiated interactions, or adapt to new device form factors.
 
-Purpose: extend tip content through `rawfile` without changing UI code.
+> **Note:**
+> This project uses a `product + feature + common` multi-module structure. The product entry is mainly under `product/phone`. New capabilities are generally extended along the existing layering; if a new product-form HAP is added, create the corresponding directory under `product/` and register it in `build-profile.json5`.
 
-Resource directory convention:
+**Step 1: Extend business capabilities**
+
+1. In `feature/tips_detail`, supplement detail-page UI, conversion, or responsive layout logic.
+2. In `feature/tips_form`, supplement widget orchestration, conversion, or `WidgetCardView` display logic.
+3. If common capabilities are involved, extend constants, `rawfile` reading, or window/language utilities in `common`, and reference them from the feature layer.
+4. If the product entry is involved, extend `EntryAbility`, `EntryFormAbility`, `pages/`, or `widget/pages/` under `product/phone` accordingly.
+5. If only tip content is extended, add a directory under `rawfile` as described in the previous section "Extend tip content", and update `tips_list.json` as needed.
+
+**Step 2: Configure/confirm Ability entries**
+
+Project entries are already declared in `product/phone/src/main/module.json5`. When extending capabilities, usually only confirm that Ability, Form, and `exported` settings meet the new scenario:
+
+```json
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "mainElement": "EntryAbility",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ],
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "exported": true
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "EntryFormAbility",
+        "srcEntry": "./ets/entryformability/EntryFormAbility.ets",
+        "type": "form"
+      }
+    ]
+  }
+}
+```
+
+**Step 3: Customize UI**
+
+After business capabilities and Ability configuration are done, extend using the detail page, service widget, or product-entry modification approaches in the previous section "Modify and tailor existing modules".
+
+If a standalone page is needed:
+
+1. Add a page or `@Builder` entry file in the corresponding module;
+2. If system route registration is required, declare it in `resources/base/profile/router_map.json`, and provide the Builder from product-layer `pages/`;
+3. Launch it through `Navigation` in `Index`, `pushPathByName`, or Want routing.
+
+If the service widget needs to be extended:
+
+1. Extend widget UI and `FormPresenter` refresh logic in `feature/tips_form`;
+2. Keep the Form entry under `product/phone` `widget/pages/`, and update size or refresh settings in `form_config.json` accordingly;
+3. After adding the widget from the desktop service-widget entry, verify display and tap navigation.
+
+## Directory
 
 ```text
-product/phone/src/main/resources/rawfile/
-├── tips_list.json              # Widget content-pool ID list
-├── tip_openharmony/
-│   ├── detail.json             # Detail content (required)
-│   ├── tip.json                # Widget content (required for desktop widget)
-│   ├── tip_openharmony.png     # Detail image (required)
-│   └── card_bg.jpg             # Widget background (required for desktop widget)
-└── tip_calendar/
-    └── ...
+openharmonytips
+├─AppScope                                      # App-level config and locale resources
+│  ├─app.json5                                  # bundleName, version, etc.
+│  └─resources/                                 # Global strings / icons and other resources
+├─common                                        # Common capabilities layer
+│  └─src/main/ets/default/
+│     ├─model/                                  # Common data models, including detail-page constants, content entities, etc.
+│     ├─resource/                               # rawfile resource reading, including JSON resource reading and image transcoding, etc.
+│     └─util/                                   # Common utilities, including window breakpoints, language switching, logging, and context, etc.
+├─feature                                       # Feature layer
+│  ├─tips_form/                                 # Service-widget feature
+│  │  └─src/main/ets/default/
+│  │     ├─convert/                             # Widget content conversion, including JSON parsing and model conversion, etc.
+│  │     ├─entity/                              # Widget entities, including short tip text and background data, etc.
+│  │     ├─model/                               # Widget models, including tip data, widget parameters, jump parameters, and other data entities
+│  │     ├─presenter/                           # Widget business logic, including add/refresh and random/sequential switching, etc.
+│  │     └─view/                                # Widget UI
+│  └─tips_detail/                               # Detail-page feature
+│     └─src/main/ets/default/
+│        ├─common/                              # Detail-page utilities, including environment properties, etc.
+│        ├─convert/                             # Detail content conversion, including detail data parsing and model conversion, etc.
+│        ├─entity/                              # Detail entities, including title, body, and image data, etc.
+│        ├─model/                               # Detail models, including title, body, and image display data, etc.
+│        ├─util/                                # Responsive layout, including phone top-bottom layout and tablet left-right split, etc.
+│        └─view/                                # Detail-page UI, including immersive image-and-text display, etc.
+├─product                                       # Product layer
+│  └─phone/                                     # Phone / tablet form-factor HAP
+│     └─src/main/
+│        ├─ets/
+│        │  ├─entryability/                     # Application main entry
+│        │  ├─entryformability/                 # Service-widget lifecycle management
+│        │  ├─pages/                            # Page entries
+│        │  └─widget/pages/                     # Widget component entries
+│        ├─resources/
+│        │  ├─base/profile/                     # Configuration files
+│        │  └─rawfile/                          # Tip resources
+│        └─module.json5                         # Ability and Form declarations
+├─hvigor                                        # Build tool config
+├─signature                                     # Signing certificates and profile
+├─build-profile.json5                           # Project-level SDK / signing / product config
+├─oh-package.json5
+├─OAT.xml                                       # Open-source compliance audit
+├─LICENSE
+├─README.md                                     # English documentation
+└─README-zh.md                                  # Chinese documentation
 ```
 
-**Table 11** Tip resource fields
+## Constraints
 
-| File | Key fields | Description |
-| --- | --- | --- |
-| detail.json | `id`, `image`, `title`, `content` | `id` matches the directory name; `title` and `content` are `{zh,en}` |
-| tip.json | `tipBgImage`, `tipDesc`, `detailLink` | Widget only; `detailLink` points to the detail ID |
-| tips_list.json | string array | Only listed IDs join desktop widget display |
-
-Steps:
-
-1. Create `rawfile/{id}/` (for example `tip_demo`) to hold all resources for the tip.
-2. Add at least `detail.json` and the detail image for detail display and cross-application jumps.
-3. For detail-only or cross-application jump without a desktop widget: do not add the ID to `tips_list.json`; `tip.json` may be omitted.
-4. For desktop widget display: add `tip.json` and the widget background, and append the ID to `tips_list.json`.
-
-Full example (detail and widget):
-
-```json
-// tip_demo/detail.json
-{
-  "id": "tip_demo",
-  "image": "tip_demo.png",
-  "title": {
-    "zh": "示例技巧标题",
-    "en": "Sample tip title"
-  },
-  "content": {
-    "zh": "这里是详情页中文正文。",
-    "en": "Detail page body in English."
-  }
-}
-```
-
-```json
-// tip_demo/tip.json
-{
-  "tipBgImage": "card_bg.jpg",
-  "tipDesc": {
-    "zh": "示例卡片短文案",
-    "en": "Sample card description"
-  },
-  "detailLink": "tip_demo"
-}
-```
-
-```json
-// tips_list.json (append tip_demo)
-["tip_openharmony", "tip_calendar", "tip_play_tips", "tip_demo"]
-```
-
-Success criteria:
-
-- Detail only: opening Want with the matching `detailLink` shows the detail page.
-- With widget: after the user adds the service widget, the new ID appears in the pending widget display list and taps open the matching detail.
-
-**Table 12** Whether to show the service widget
-
-| Goal | detail.json and images | tip.json and widget background | Write tips_list.json |
-| --- | --- | --- | --- |
-| Detail or cross-application jump only | Required | Not required | No |
-| Detail and desktop widget display | Required | Required | Yes |
-
-## Description
-
-### API Description
-
-This section lists only the Want parameters required to open a Tips detail page from another application, to help other applications integrate.
-
-**Table 13** Cross-application Want parameters
-
-| Item | Value | Description |
-| --- | --- | --- |
-| `bundleName` | `com.ohos.tips` | Tips application bundle name |
-| `abilityName` | `EntryAbility` | Main Ability name |
-| `parameters.params` | JSON string | Must include `detailLink`; the value matches the `rawfile` subdirectory name |
-
-Call example (ArkTS):
-
-```typescript
-import { common, Want } from '@kit.AbilityKit';
-import { BusinessError } from '@kit.BasicServicesKit';
-
-private launchTipsDetail(detailLink: string): void {
-  const context = this.getUIContext().getHostContext() as common.UIAbilityContext;
-  const want: Want = {
-    bundleName: 'com.ohos.tips',
-    abilityName: 'EntryAbility',
-    parameters: {
-      // Must be a JSON string; detailLink matches the rawfile subdirectory name
-      params: JSON.stringify({ detailLink: detailLink })
-    }
-  };
-  context.startAbility(want).catch((err: BusinessError) => {
-    console.error(`startAbility failed, code: ${err.code}, message: ${err.message}`);
-  });
-}
-
-// Example: open the test detail page (rawfile/test/detail.json exists in the project)
-this.launchTipsDetail('test');
-```
-
-Want parameter shape:
-
-```json
-{
-  "bundleName": "com.ohos.tips",
-  "abilityName": "EntryAbility",
-  "parameters": {
-    "params": "{\"detailLink\":\"test\"}"
-  }
-}
-```
-
-### Usage Description
-
-#### Browse the Desktop Service Widget
-
-Purpose: view tip summaries on the desktop.
-
-1. Add the Tips widget (size `2*2`) from the desktop service-widget entry.
-2. View the short tip text and background image on the widget.
-
-Success criteria: the widget renders correctly and can open the detail page on tap.
-
-#### View Tip Details
-
-Purpose: read the full image-and-text guide.
-
-1. Tap the desktop service widget, or start `EntryAbility` from another application with Want carrying `detailLink`.
-2. Read the title, body, and image on the detail page.
-
-Success criteria: displayed content matches `rawfile/{detailLink}/detail.json` and images; wide breakpoints may use a left-right split.
-
-#### FormLink Navigation from the Widget
-
-Purpose: understand how a widget tap launches the detail page.
-
-Widget UI is implemented in `WidgetCardView` under `feature/tips_form`. FormLink carries `detailLink` and `formId`:
-
-```typescript
-// feature/tips_form/src/main/ets/default/view/WidgetCard.ets
-FormLink({
-  action: this.actionType,
-  abilityName: this.abilityName,
-  params: {
-    formId: this.formId,
-    detailLink: this.detailLink,
-  }
-}) {
-  // Widget UI
-}
-```
+- **Language version**: ArkTS
+- **Runtime form**: Preinstalled system application (`com.ohos.tips`)
+- **Device types**: Phone, tablet
+- **Service widget size**: Only `2*2` is supported
+- **Cross-application jump**: Only system applications can perform cross-application jumps; keep `EntryAbility` `exported` as `true`; Want must carry `detailLink` in the `parameters.params` JSON string (the value matches the `rawfile` subdirectory name)
+- **Form-factor adaptation**: Phones default to a top-bottom layout; tablets use a left-right split in wide-screen scenarios (horizontal breakpoint greater than or equal to `840vp`); when modifying UI, verify both phone and tablet
 
 ## References
 
@@ -424,12 +400,6 @@ You are welcome to contribute code and documentation. For the contribution proce
 
 ## Related Repositories
 
-[**ability_form_fwk**](https://gitcode.com/openharmony/ability_form_fwk)
+[**applications_settings**](https://gitcode.com/openharmony/applications_settings)
 
-[**arkui_ace_engine**](https://gitcode.com/openharmony/arkui_ace_engine)
-
-[**arkui_ui_appearance**](https://gitcode.com/openharmony/arkui_ui_appearance)
-
-[**ability_base**](https://gitcode.com/openharmony/ability_ability_base)
-
-[**ability_runtime**](https://gitcode.com/openharmony/ability_ability_runtime)
+[**window_scene_board**](https://gitcode.com/openharmony/window_scene_board)
