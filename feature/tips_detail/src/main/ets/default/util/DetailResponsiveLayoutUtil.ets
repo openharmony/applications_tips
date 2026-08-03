@@ -22,15 +22,15 @@ export interface DetailImageSize {
 
 export class DetailResponsiveLayoutUtil {
   /** 宽高比阈值：9/7.2 = 1.25 */
-  static readonly ASPECT_THRESHOLD: number = 9 / 7.2;
+  public static readonly ASPECT_THRESHOLD: number = 9 / 7.2;
   /** 配图宽高比例：4:3 */
-  static readonly IMAGE_ASPECT_WIDTH: number = 4;
-  static readonly IMAGE_ASPECT_HEIGHT: number = 3;
+  public static readonly IMAGE_ASPECT_WIDTH: number = 4;
+  public static readonly IMAGE_ASPECT_HEIGHT: number = 3;
   /** pad 配图宽度：屏幕短边的 80% */
-  static readonly IMAGE_SHORT_SIDE_RATIO: number = 0.8;
+  public static readonly IMAGE_SHORT_SIDE_RATIO: number = 0.8;
   /** pad 横屏文本区域宽度：屏幕长边的 40% */
-  static readonly TEXT_LONG_SIDE_RATIO: number = 0.4;
-  static readonly TEXT_MARGIN_2M: number = 16;
+  public static readonly TEXT_LONG_SIDE_RATIO: number = 0.4;
+  public static readonly TEXT_MARGIN_2M: number = 16;
 
   /** lg/xl 横向断点（≥840vp） */
   static is12C(widthBp: WidthBreakpoint): boolean {
