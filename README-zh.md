@@ -32,11 +32,11 @@
 
 整体可划分为产品层、特性层、公共层：
 
-| 层次 | 主要目录/组件 | 说明                                              |
-| --- | --- |-------------------------------------------------|
-| 产品层 | `product` | 支持手机、平板形态                                       |
-| 特性层 | `feature/tips_form`、`feature/tips_detail` | 服务卡片、详情页                                        |
-| 公共层 | `common/util`、`common/resource`、`common/model` | util（窗口断点、语言、日志）、resource（rawfile资源读取）、model（跨特性常量与实体） |
+| 层次 | 主要目录/组件                                       | 说明                                                    |
+| --- |-----------------------------------------------|-------------------------------------------------------|
+| 产品层 | `product`                                     | 支持手机、平板形态                                             |
+| 特性层 | `feature/tips_form`、`feature/tips_detail`     | 服务卡片、详情页                                              |
+| 公共层 | `common/util`、`common/resource`、`common/data` | util（窗口断点、语言、日志）、resource（rawfile资源读取）、data（跨特性常量与实体） |
 
 依赖方向约束如下：
 
@@ -56,7 +56,7 @@
 
 | 核心能力 | 模块       | 说明 |
 | --- |----------| --- |
-| 数据模型 | model    | 跨特性常量与内容实体 |
+| 数据模型 | data     | 跨特性常量与内容实体 |
 | 资源读取 | resource | rawfile读取与图片转码 |
 | 通用工具 | util     | 窗口断点、语言切换、日志与上下文 |
 
@@ -108,7 +108,7 @@ Ability与Form入口在`product/phone/src/main/module.json5`中声明：
 ```
 
 ### 环境要求
-- OpenHarmony SDK（本工程 `compileSdkVersion` 为 23，`compatibleSdkVersion` / `targetSdkVersion` 为 20）
+- Openharmony SDK: compileSdkVersion 26, compatibleSdkVersion / targetSdkVersion 23
 - DevEco Studio 或命令行 Hvigor 工具链
 - 系统签名证书（见 `signature/`）
 
@@ -344,7 +344,7 @@ openharmonytips
 │  └─resources/                                 # 全局字符串 / 图标等资源
 ├─common                                        # 公共能力层
 │  └─src/main/ets/default/
-│     ├─model/                                  # 公共数据模型，包括详情页常量、内容实体等
+│     ├─data/                                  # 公共数据，包括详情页常量、内容实体等
 │     ├─resource/                               # rawfile资源读取，包括json资源读取与图片转码等
 │     └─util/                                   # 通用工具，包括窗口断点、语言切换、日志与上下文等
 ├─feature                                       # 特性层
@@ -377,7 +377,7 @@ openharmonytips
 │        └─module.json5                         # Ability与Form声明
 ├─hvigor                                        # 构建工具配置
 ├─signature                                     # 签名证书与profile
-├─build-profile.json5                           # 工程级SDK / 签名 / product配置
+├─build-profile.json5                           # 工程级配置
 ├─oh-package.json5
 ├─OAT.xml                                       # 开源合规审计
 ├─LICENSE
@@ -397,9 +397,3 @@ openharmonytips
 ## 参考文献
 
 欢迎广大开发者贡献代码、文档等，具体的贡献流程和方式请参见[参与贡献](https://gitcode.com/openharmony/docs/blob/master/zh-cn/contribute/%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE.md)。
-
-## 相关仓
-
-[**applications_settings**](https://gitcode.com/openharmony/applications_settings)
-
-[**window_scene_board**](https://gitcode.com/openharmony/window_scene_board)
