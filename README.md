@@ -36,7 +36,7 @@ The overall structure is divided into product, feature, and common layers:
 | --- | --- | --- |
 | Product | `product` | Supports phone and tablet form factors |
 | Feature | `feature/tips_form`, `feature/tips_detail` | Service widget, detail page |
-| Common | `common/util`, `common/resource`, `common/model` | util (window breakpoints, language, logging), resource (rawfile reading), model (cross-feature constants and entities) |
+| Common | `common/util`, `common/resource`, `common/data` | util (window breakpoints, language, logging), resource (rawfile reading), data (cross-feature constants and entities) |
 
 Dependency rules:
 
@@ -56,7 +56,7 @@ Dependency rules:
 
 | Core capability | Module | Description |
 | --- | --- | --- |
-| Data model | model | Cross-feature constants and content entities |
+| Data model | data | Cross-feature constants and content entities |
 | Resource reading | resource | rawfile reading and image transcoding |
 | Common utilities | util | Window breakpoints, language switching, logging, and context |
 
@@ -108,7 +108,7 @@ Ability and Form entries are declared in `product/phone/src/main/module.json5`:
 ```
 
 ### Environment Requirements
-- OpenHarmony SDK (`compileSdkVersion` is 23; `compatibleSdkVersion` / `targetSdkVersion` are 20 in this project)
+- OpenHarmony SDK: compileSdkVersion 26, compatibleSdkVersion / targetSdkVersion 23
 - DevEco Studio or the command-line Hvigor toolchain
 - System signing certificates (see `signature/`)
 
@@ -344,7 +344,7 @@ openharmonytips
 │  └─resources/                                 # Global strings / icons and other resources
 ├─common                                        # Common capabilities layer
 │  └─src/main/ets/default/
-│     ├─model/                                  # Common data models, including detail-page constants, content entities, etc.
+│     ├─data/                                  # Common data, including detail-page constants, content entities, etc.
 │     ├─resource/                               # rawfile resource reading, including JSON resource reading and image transcoding, etc.
 │     └─util/                                   # Common utilities, including window breakpoints, language switching, logging, and context, etc.
 ├─feature                                       # Feature layer
@@ -377,7 +377,7 @@ openharmonytips
 │        └─module.json5                         # Ability and Form declarations
 ├─hvigor                                        # Build tool config
 ├─signature                                     # Signing certificates and profile
-├─build-profile.json5                           # Project-level SDK / signing / product config
+├─build-profile.json5                           # Project-level config
 ├─oh-package.json5
 ├─OAT.xml                                       # Open-source compliance audit
 ├─LICENSE
@@ -397,9 +397,3 @@ openharmonytips
 ## References
 
 You are welcome to contribute code and documentation. For the contribution process, see [How to contribute](https://gitcode.com/openharmony/docs/blob/master/en/contribute/contribution-process.md).
-
-## Related Repositories
-
-[**applications_settings**](https://gitcode.com/openharmony/applications_settings)
-
-[**window_scene_board**](https://gitcode.com/openharmony/window_scene_board)
