@@ -2,7 +2,7 @@
 
 ## 简介
 
-**玩机技巧**（应用包名：`com.ohos.tips`）是OpenHarmony中预置的**系统应用**，应用通过服务卡片、详情页向用户提供设备使用技巧，并适配手机、平板形态。
+**玩机技巧**（应用包名：`com.ohos.tips`）是OpenHarmony中预置的**系统应用**，通过服务卡片、详情页向用户提供设备使用技巧，并适配手机、平板形态。
 
 ### 核心能力
 
@@ -10,7 +10,7 @@
 - 支持详情页展示技巧标题、正文与配图，内容区域延伸到状态栏显示，实现沉浸式交互体验。
 - 支持响应式布局，根据设备类型与窗口断点自适应布局，手机采用上下布局，平板在宽屏场景下采用左右分栏。
 - 支持跟随系统语言切换详情页语言。
-- 支持其它系统应用跨应用跳转至详情页。
+- 支持其它系统应用通过Want携带技巧编号，跨应用跳转至玩机技巧中已存在此系统应用预置数据的指定详情页。
 
 **服务卡片**
 - 支持卡片式内容浏览，提供`2*2`尺寸卡片，展示技巧短文案与背景图。
@@ -32,11 +32,11 @@
 
 整体可划分为产品层、特性层、公共层：
 
-| 层次 | 主要目录/组件                                       | 说明                                                    |
-| --- |-----------------------------------------------|-------------------------------------------------------|
-| 产品层 | `product`                                     | 支持手机、平板形态                                             |
-| 特性层 | `feature/tips_form`、`feature/tips_detail`     | 服务卡片、详情页                                              |
-| 公共层 | `common/util`、`common/resource`、`common/data` | util（窗口断点、语言、日志）、resource（rawfile资源读取）、data（跨特性常量与实体） |
+| 层次 | 主要目录/组件                                   | 说明           |
+| --- |-----------------------------------------|--------------|
+| 产品层 | `product`                               | 支持手机、平板形态    |
+| 特性层 | `feature/tips_form`、`feature/tips_detail` | 服务卡片、详情页     |
+| 公共层 | `common`                                | 工具类、资源读取、实体类 |
 
 依赖方向约束如下：
 
@@ -51,14 +51,6 @@
 | --- |-------------| --- |
 | 详情页 | tips_detail | 沉浸式图文展示、响应式布局、语言切换、跨应用打开 |
 | 服务卡片 | tips_ form       | 卡片浏览与跳转、随机/按序刷新、语言切换、技巧扩展 |
-
-**公共层模块说明**：
-
-| 核心能力 | 模块       | 说明 |
-| --- |----------| --- |
-| 数据模型 | data     | 跨特性常量与内容实体 |
-| 资源读取 | resource | rawfile读取与图片转码 |
-| 通用工具 | util     | 窗口断点、语言切换、日志与上下文 |
 
 ### 与其它应用的关系
 
@@ -108,7 +100,7 @@ Ability与Form入口在`product/phone/src/main/module.json5`中声明：
 ```
 
 ### 环境要求
-- Openharmony SDK: compileSdkVersion 26, compatibleSdkVersion / targetSdkVersion 23
+- OpenHarmony SDK: compileSdkVersion 26.0.0, compatibleSdkVersion / targetSdkVersion 23
 - DevEco Studio 或命令行 Hvigor 工具链
 - 系统签名证书（见 `signature/`）
 
@@ -338,13 +330,13 @@ hvigorw assembleHap
 ## 目录
 
 ```text
-openharmonytips
+applications_tips
 ├─AppScope                                      # 应用级配置与多语言资源
 │  ├─app.json5                                  # bundleName、版本号等
 │  └─resources/                                 # 全局字符串 / 图标等资源
 ├─common                                        # 公共能力层
 │  └─src/main/ets/default/
-│     ├─data/                                  # 公共数据，包括详情页常量、内容实体等
+│     ├─model/                                  # 公共数据模型，包括页面标识、资源文件名与中英文案等
 │     ├─resource/                               # rawfile资源读取，包括json资源读取与图片转码等
 │     └─util/                                   # 通用工具，包括窗口断点、语言切换、日志与上下文等
 ├─feature                                       # 特性层
@@ -394,6 +386,6 @@ openharmonytips
 - **跨应用跳转**：仅系统应用可进行跨应用跳转；`EntryAbility`须保持`exported`为`true`；Want须通过`parameters.params` JSON字符串携带`detailLink`（取值与`rawfile`子目录名一致）
 - **形态适配**：手机默认上下布局，平板在宽屏场景（横向断点大于或等于`840vp`）下为左右分栏；修改UI时需覆盖手机与平板验证
 
-## 参考文献
+## 参与贡献
 
 欢迎广大开发者贡献代码、文档等，具体的贡献流程和方式请参见[参与贡献](https://gitcode.com/openharmony/docs/blob/master/zh-cn/contribute/%E5%8F%82%E4%B8%8E%E8%B4%A1%E7%8C%AE.md)。

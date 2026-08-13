@@ -10,7 +10,7 @@
 - Supports displaying tip title, body, and image on the detail page; the content area extends into the status bar for an immersive interaction experience.
 - Supports responsive layout that adapts by device type and window breakpoint; phones use a top-bottom layout, and tablets use a left-right split in wide-screen scenarios.
 - Supports following the system language to switch the detail page language.
-- Supports cross-application navigation from other system applications to the detail page.
+- Supports other system applications to carry a tip ID through Want and navigate cross-application to a specified detail page in Tips where preinstalled data from this system application exists.
 
 **Service widget**
 - Supports card-style content browsing, provides a `2*2` widget that displays short tip text and a background image.
@@ -36,7 +36,7 @@ The overall structure is divided into product, feature, and common layers:
 | --- | --- | --- |
 | Product | `product` | Supports phone and tablet form factors |
 | Feature | `feature/tips_form`, `feature/tips_detail` | Service widget, detail page |
-| Common | `common/util`, `common/resource`, `common/data` | util (window breakpoints, language, logging), resource (rawfile reading), data (cross-feature constants and entities) |
+| Common | `common` | Utilities, resource reading, entity classes |
 
 Dependency rules:
 
@@ -51,14 +51,6 @@ Dependency rules:
 | --- | --- | --- |
 | Detail page | tips_detail | Immersive image-and-text display, responsive layout, language switching, cross-application open |
 | Service widget | tips_form | Widget browsing and navigation, random/sequential refresh, language switching, tip extension |
-
-**Common-layer modules**:
-
-| Core capability | Module | Description |
-| --- | --- | --- |
-| Data model | data | Cross-feature constants and content entities |
-| Resource reading | resource | rawfile reading and image transcoding |
-| Common utilities | util | Window breakpoints, language switching, logging, and context |
 
 ### Relationship with Other Applications
 
@@ -108,7 +100,7 @@ Ability and Form entries are declared in `product/phone/src/main/module.json5`:
 ```
 
 ### Environment Requirements
-- OpenHarmony SDK: compileSdkVersion 26, compatibleSdkVersion / targetSdkVersion 23
+- OpenHarmony SDK: compileSdkVersion 26.0.0, compatibleSdkVersion / targetSdkVersion 23
 - DevEco Studio or the command-line Hvigor toolchain
 - System signing certificates (see `signature/`)
 
@@ -338,13 +330,13 @@ If the service widget needs to be extended:
 ## Directory
 
 ```text
-openharmonytips
+application_tips
 ├─AppScope                                      # App-level config and locale resources
 │  ├─app.json5                                  # bundleName, version, etc.
 │  └─resources/                                 # Global strings / icons and other resources
 ├─common                                        # Common capabilities layer
 │  └─src/main/ets/default/
-│     ├─data/                                  # Common data, including detail-page constants, content entities, etc.
+│     ├─model/                                  # Common data models, including page IDs, resource file names, and localized text, etc.
 │     ├─resource/                               # rawfile resource reading, including JSON resource reading and image transcoding, etc.
 │     └─util/                                   # Common utilities, including window breakpoints, language switching, logging, and context, etc.
 ├─feature                                       # Feature layer
@@ -377,7 +369,7 @@ openharmonytips
 │        └─module.json5                         # Ability and Form declarations
 ├─hvigor                                        # Build tool config
 ├─signature                                     # Signing certificates and profile
-├─build-profile.json5                           # Project-level config
+├─build-profile.json5                           # Project-level configuration
 ├─oh-package.json5
 ├─OAT.xml                                       # Open-source compliance audit
 ├─LICENSE
@@ -394,6 +386,6 @@ openharmonytips
 - **Cross-application jump**: Only system applications can perform cross-application jumps; keep `EntryAbility` `exported` as `true`; Want must carry `detailLink` in the `parameters.params` JSON string (the value matches the `rawfile` subdirectory name)
 - **Form-factor adaptation**: Phones default to a top-bottom layout; tablets use a left-right split in wide-screen scenarios (horizontal breakpoint greater than or equal to `840vp`); when modifying UI, verify both phone and tablet
 
-## References
+## Contributing
 
-You are welcome to contribute code and documentation. For the contribution process, see [How to contribute](https://gitcode.com/openharmony/docs/blob/master/en/contribute/contribution-process.md).
+You are welcome to contribute code and documentation. For the contribution process and methods, see [How to contribute](https://gitcode.com/openharmony/docs/blob/master/en/contribute/contribution-process.md).

@@ -30,10 +30,10 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compileSdkVersion": 23,
-        "compatibleSdkVersion": 20,
+        "compileSdkVersion": '26.0.0',
+        "compatibleSdkVersion": 23,
         "runtimeOS": "OpenHarmony",
-        "targetSdkVersion": 20,
+        "targetSdkVersion": 23,
         "buildOption": {
           "strictMode": {
             "caseSensitiveCheck": true,
