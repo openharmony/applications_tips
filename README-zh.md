@@ -1,8 +1,8 @@
-# 玩机技巧（Tips）
+# Tips（Tips）
 
 ## 简介
 
-**玩机技巧**（应用包名：`com.ohos.tips`）是OpenHarmony中预置的**系统应用**，通过服务卡片、详情页向用户提供设备使用技巧，并适配手机、平板形态。
+**Tips**（应用包名：`com.ohos.tips`）是OpenHarmony中预置的**系统应用**，通过服务卡片、详情页向用户提供设备使用技巧，并适配手机、平板形态。
 
 ### 核心能力
 
@@ -10,7 +10,7 @@
 - 支持详情页展示技巧标题、正文与配图，内容区域延伸到状态栏显示，实现沉浸式交互体验。
 - 支持响应式布局，根据设备类型与窗口断点自适应布局，手机采用上下布局，平板在宽屏场景下采用左右分栏。
 - 支持跟随系统语言切换详情页语言。
-- 支持其它系统应用通过Want携带技巧编号，跨应用跳转至玩机技巧中已存在此系统应用预置数据的指定详情页。
+- 支持其它系统应用通过Want携带技巧编号，跨应用跳转至Tips中已存在此系统应用预置数据的指定详情页。
 
 **服务卡片**
 - 支持卡片式内容浏览，提供`2*2`尺寸卡片，展示技巧短文案与背景图。
@@ -18,15 +18,15 @@
 - 支持每日随机刷新，展示每日技巧。
 - 支持按序刷新，从卡片进入详情并退出后，可按卡片列表顺序切换至下一条。
 - 支持跟随系统语言切换卡片文案语言。
-- 支持新增玩机技巧，在`rawfile`下新增技巧目录并配置详情与卡片资源，需要桌面卡片展示时需要将编号写入`tips_list.json`。
+- 支持新增卡片，在`rawfile`下新增技巧目录并配置详情与卡片资源，需要桌面卡片展示时需要将编号写入`tips_list.json`。
 
 ### 架构说明
 
-玩机技巧采用分层与模块化设计，按产品形态、业务特性与公共能力组织代码，如图：
+Tips采用分层与模块化设计，按产品形态、业务特性与公共能力组织代码，如图：
 
-**图1** 玩机技巧分层架构
+**图1** Tips分层架构
 
-![玩机技巧分层架构](./docs/figures/tips_architecture.png)
+![Tips分层架构](./docs/figures/tips_architecture.png)
 
 ### 应用层分层设计
 
@@ -113,9 +113,9 @@ hvigorw assembleHap
 
 构建成功后在`product/phone/build`输出目录生成HAP产物。
 
-## 玩机技巧开发
+## Tips开发
 
-玩机技巧采用ArkTS语言开发，UI基于ArkUI Stage模型。应用通过`EntryAbility`承载主界面与跨应用跳转，通过`feature/tips_detail`完成详情页展示，通过`feature/tips_form`完成服务卡片编排与刷新，并通过`common`提供窗口、语言、日志与`rawfile`读取等公共能力。开发可参考：[ArkUI开发概述](https://gitcode.com/openharmony/docs/blob/master/zh-cn/application-dev/ui/arkts-ui-development-overview.md)
+Tips采用ArkTS语言开发，UI基于ArkUI Stage模型。应用通过`EntryAbility`承载主界面与跨应用跳转，通过`feature/tips_detail`完成详情页展示，通过`feature/tips_form`完成服务卡片编排与刷新，并通过`common`提供窗口、语言、日志与`rawfile`读取等公共能力。开发可参考：[ArkUI开发概述](https://gitcode.com/openharmony/docs/blob/master/zh-cn/application-dev/ui/arkts-ui-development-overview.md)
 
 ### 基于已有模块的开发
 
@@ -182,7 +182,7 @@ hvigorw assembleHap
     }
 ```
 
-**场景4：扩展玩机技巧内容**
+**场景4：扩展Tips内容**
    - 资源目录位于`product/phone/src/main/resources/rawfile/`
    - 详情页与服务卡片共用同一技巧编号目录
    - `detail.json`中配置详情页内容，`tip.json`中配置卡片内容，`tips_list.json`决定编号是否进入卡片展示列表
