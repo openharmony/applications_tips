@@ -1,4 +1,4 @@
-# Tips（Tips）
+# Tips
 
 ## 简介
 
